@@ -1,7 +1,7 @@
 package com.jhuang78.cgmap.graphics
 
 import com.google.common.truth.Truth.assertThat
-import com.google.common.io.Resources
+import com.google.common.io.Resources.getResource
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
@@ -29,7 +29,7 @@ class GraphicsTest : Spek({
 
     describe("an InfoFileReader") {
         given("a valid input file") {
-            val path = Paths.get(Resources.getResource("GraphicInfo_66_small.bin").path)
+            val path = Paths.get(getResource("GraphicInfo_66_small.bin").path)
             val reader = InfoFileReader(path)
             it("should know number of entries") {
                 assertThat(reader.size).isEqualTo(2)
@@ -73,7 +73,7 @@ class GraphicsTest : Spek({
         }
 
         given("an input that is a directory") {
-            val path = Paths.get(Resources.getResource(".").path)
+            val path = Paths.get(getResource(".").path)
             it("should fail to instanciate") {
                 assertFailsWith<IllegalArgumentException> {
                     InfoFileReader(path)
@@ -82,14 +82,12 @@ class GraphicsTest : Spek({
         }
 
         given("an input that is an invalid file") {
-            val path = Paths.get(Resources.getResource("random.bin").path)
+            val path = Paths.get(getResource("random.bin").path)
             it("should fail to read any entry") {
                 assertFailsWith<IllegalStateException> {
                     InfoFileReader(path).read(0)
                 }
             }
         }
-
     }
-
 })
