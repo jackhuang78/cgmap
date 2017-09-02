@@ -37,11 +37,15 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
+    compile 'com.google.guava:guava:23.0'
 
     testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
     testCompile "org.jetbrains.spek:spek-api:${spekVersion}"
     testRuntime "org.jetbrains.spek:spek-junit-platform-engine:${spekVersion}"
     testCompile 'com.google.truth:truth:0.34'
+
+
+
 
 
 
