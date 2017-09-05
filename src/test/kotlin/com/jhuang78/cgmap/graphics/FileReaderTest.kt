@@ -1,11 +1,10 @@
 package com.jhuang78.cgmap.graphics
 
-import com.google.common.io.Resources
+import com.google.common.io.Resources.getResource
 import com.google.common.truth.Truth.assertThat
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.given
-import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.*
+import java.awt.Color
 import java.nio.file.Paths
 import kotlin.test.assertFailsWith
 
@@ -13,7 +12,7 @@ class FileReaderTest : Spek({
 
     describe("an InfoFileReader") {
         given("a valid input file") {
-            val path = Paths.get(Resources.getResource("GraphicInfo_66_small.bin").path)
+            val path = Paths.get(getResource("GraphicInfo_66_small.bin").path)
             val reader = InfoFileReader(path)
             it("should know number of entries") {
                 assertThat(reader.size).isEqualTo(2)
@@ -56,20 +55,15 @@ class FileReaderTest : Spek({
             }
         }
 
-        given("an input that is a directory") {
-            val path = Paths.get(Resources.getResource(".").path)
-            it("should fail to instanciate") {
-                assertFailsWith<IllegalArgumentException> {
-                    InfoFileReader(path)
-                }
-            }
-        }
-
-        given("an input that is an invalid file") {
-            val path = Paths.get(Resources.getResource("random.bin").path)
-            it("should fail to read any entry") {
-                assertFailsWith<IllegalStateException> {
-                    InfoFileReader(path).read(0)
+        given("an invalid input") {
+            arrayOf(".", "random.bin").forEach {
+                context("path=${it}") {
+                    val path = Paths.get(getResource(it).path)
+                    it("should fail to read an entry") {
+                        assertFailsWith<Exception> {
+                            InfoFileReader(path).read(0)
+                        }
+                    }
                 }
             }
         }
@@ -77,7 +71,7 @@ class FileReaderTest : Spek({
 
     describe("an DataFileReader") {
         given("an valid input file") {
-            val path = Paths.get(Resources.getResource("Graphic_66_0_424.bin").path)
+            val path = Paths.get(getResource("Graphic_66_0_424.bin").path)
             val reader = DataFileReader(path)
 
             it("should read entry correctly") {
@@ -88,6 +82,33 @@ class FileReaderTest : Spek({
                 assertThat(data.width).isEqualTo(0x00000040)
                 assertThat(data.height).isEqualTo(0x0000002f)
                 assertThat(data.dataLength).isEqualTo(424)
+            }
+        }
+    }
+
+    describe("a PaletFileReader") {
+        given("an valid directory") {
+            val dir = Paths.get(getResource("palet").path)
+            val reader = PaletFileReader(dir)
+
+            given("an valid file") {
+                val file = Paths.get("palet_00.cgp")
+                val palet = reader.read(file)
+                it("should read base colors") {
+                    assertThat(palet.colors[0]).isEqualTo(Color(0x00, 0x00, 0x00))
+                    assertThat(palet.colors[15]).isEqualTo(Color(0x28, 0xE1, 0x28))
+                    assertThat(palet.colors[240]).isEqualTo(Color(0x96, 0xC3, 0xF5))
+                    assertThat(palet.colors[255]).isEqualTo(Color(0xFF, 0xFF, 0xFF))
+                }
+                it("should read custom colors") {
+                    assertThat(palet.colors[16]).isEqualTo(Color(0xA4, 0xF7, 0x85))
+                    assertThat(palet.colors[17]).isEqualTo(Color(0x96, 0xE2, 0x7A))
+                    assertThat(palet.colors[32]).isEqualTo(Color(0xB9, 0x52, 0x41))
+                    assertThat(palet.colors[64]).isEqualTo(Color(0xBE, 0x8A, 0xEC))
+                    assertThat(palet.colors[128]).isEqualTo(Color(0xA0, 0xC8, 0xF6))
+                    assertThat(palet.colors[239]).isEqualTo(Color(0x92, 0x53, 0x4D))
+                }
+
             }
         }
     }
