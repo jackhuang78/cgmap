@@ -39,19 +39,17 @@ class InfoFileReader(val path: Path): AutoCloseable {
                 occupyEast = buffer.get().toInt(),
                 occupySouth = buffer.get().toInt(),
                 mark = buffer.get().toInt(),
-                //FIXME: order of bytes is wrong
-                unknown = Longs.fromBytes(
-                        buffer.get(),
-                        buffer.get(),
-                        buffer.get(),
-                        buffer.get(),
-                        buffer.get(),
-                        0.toByte(),
-                        0.toByte(),
-                        0.toByte()
-                ),
+                unknown =  {
+                    val b1 = buffer.get()
+                    val b2 = buffer.get()
+                    val b3 = buffer.get()
+                    val b4 = buffer.get()
+                    val b5 = buffer.get()
+                    Longs.fromBytes(0, 0, 0, b5, b4, b3, b2, b1)
+                }(),
                 mapNo = buffer.getInt()
-        ).validate()
+            ).validate()
+        }
     }
 
     override fun close() {
