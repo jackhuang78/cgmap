@@ -49,7 +49,7 @@ class InfoFileReader(val path: Path): AutoCloseable {
                 }(),
                 mapNo = buffer.getInt()
             ).validate()
-        }
+
     }
 
     override fun close() {

@@ -57,6 +57,7 @@ data class GraphicData(
     }
 }
 
+val GRAPHIC_PALET_TRANSPARENT = Color(0,0,0,0)
 data class GraphicPalet(
         val colors: Array<Color> = arrayOf()
 )
