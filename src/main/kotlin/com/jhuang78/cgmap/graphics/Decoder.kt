@@ -8,7 +8,24 @@ fun ByteBuffer.getDataByteAt(idx: Int): Byte {
     return if(idx < capacity()) get(idx) else 0
 }
 
-class GraphicDecoder(val data: ByteBuffer) : Iterable<Int> {
+class UncompressedDataDecoder(val data: ByteBuffer): Iterable<Int> {
+    override fun iterator(): Iterator<Int> {
+        return object: Iterator<Int> {
+            var idx = 0
+            override fun hasNext(): Boolean {
+                return (idx < data.capacity())
+            }
+
+            override fun next(): Int {
+                val v = data.get(idx).toUint()
+                idx++
+                return v
+            }
+        }
+    }
+}
+
+class CompressedDataDecoder(val data: ByteBuffer) : Iterable<Int> {
     enum class State {
         SN, S0, S1, S2, S8, S9, SA, SC, SD, SE
     }

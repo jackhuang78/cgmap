@@ -16,7 +16,7 @@ fun List<Int>.appendRandom(n: Int, r: Random): List<Int> {
     return ml
 }
 fun List<Int>.appendRepeated(n: Int, v: Int): List<Int> {
-    val ml = this.toMutableList()
+    val ml = if (this is MutableList<Int>) this else this.toMutableList()
     ml.addAll((1..n).map { v })
     return ml
 }
@@ -27,9 +27,8 @@ fun List<Int>.append(vararg vs: Int): List<Int> {
 }
 
 
-
 class DecoderTest: Spek({
-    describe("GraphicDecoder") {
+    describe("CompressedDataDecoder") {
         val r1 = Random(0)
         val r2 = Random(0)
 
@@ -141,7 +140,7 @@ class DecoderTest: Spek({
         ).forEach { (name, start, length, data, output) ->
 
             describe("case ${name}") {
-                val decoder = GraphicDecoder((data as List<Int>).toByteBuffer())
+                val decoder = CompressedDataDecoder((data as List<Int>).toByteBuffer())
 
                 it("should decode data correctly") {
                     val expected = (output as List<Int>).iterator()

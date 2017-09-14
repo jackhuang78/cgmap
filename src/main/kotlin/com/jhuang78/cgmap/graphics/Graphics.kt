@@ -55,9 +55,20 @@ data class GraphicData(
                 "Expect data length to be ${DATA_HEADER_SIZE}(header) + ${data.capacity()}(data) = ${DATA_HEADER_SIZE + data.capacity()}, but got ${dataLength}.")
         return this
     }
+
+    fun isCompressed(): Boolean {
+        return (version % 2 == 1)
+    }
 }
 
 val GRAPHIC_PALET_TRANSPARENT = Color(0,0,0,0)
 data class GraphicPalet(
         val colors: Array<Color> = arrayOf()
-)
+) {
+    fun get(colorPoint: Int): Color {
+        return if(colorPoint >= 0)
+            colors[colorPoint]
+        else
+            GRAPHIC_PALET_TRANSPARENT
+    }
+}
