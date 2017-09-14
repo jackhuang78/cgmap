@@ -61,7 +61,6 @@ class GraphicDecoder(val data: ByteBuffer) : Iterable<Int> {
             override fun next(): Int {
                 input = {
                     val b0 = if(output.idx + 0 < data.capacity()) data.get(output.idx + 0) else 0
-
                     Input(
                             state = output.state,
                             idx = output.idx,
@@ -83,32 +82,32 @@ class GraphicDecoder(val data: ByteBuffer) : Iterable<Int> {
                             0x0.toByte() -> {
                                 val count = Ints.fromBytes(0, 0, 0, input.b0l)
                                 val state = if(count == 1) State.SN else State.S0
-                                Output(state, input.idx + 2, input.b1.toInt(), count - 1)
+                                Output(state, input.idx + 2, input.b1.toUint(), count - 1)
                             }
                             0x1.toByte() -> {
                                 val count = Ints.fromBytes(0, 0, input.b0l, input.b1)
                                 val state = if(count == 1) State.SN else State.S1
-                                Output(state, input.idx + 3, input.b2.toInt(), count - 1)
+                                Output(state, input.idx + 3, input.b2.toUint(), count - 1)
                             }
                             0x2.toByte() -> {
                                 val count = Ints.fromBytes(0, input.b0l, input.b1, input.b2)
                                 val state = if(count == 1) State.SN else State.S2
-                                Output(state, input.idx + 4, input.b3.toInt(), count - 1)
+                                Output(state, input.idx + 4, input.b3.toUint(), count - 1)
                             }
                             0x8.toByte() -> {
                                 val count = Ints.fromBytes(0, 0, 0, input.b0l)
                                 val state = if(count == 1) State.SN else State.S8
-                                Output(state, input.idx + 2, input.b1.toInt(), count - 1)
+                                Output(state, input.idx + 2, input.b1.toUint(), count - 1)
                             }
                             0x9.toByte() -> {
                                 val count = Ints.fromBytes(0, 0, input.b0l, input.b2)
                                 val state = if(count == 1) State.SN else State.S9
-                                Output(state, input.idx + 3, input.b1.toInt(), count - 1)
+                                Output(state, input.idx + 3, input.b1.toUint(), count - 1)
                             }
                             0xA.toByte() -> {
                                 val count = Ints.fromBytes(0, input.b0l, input.b2, input.b3)
                                 val state = if(count == 1) State.SN else State.SA
-                                Output(state, input.idx + 4, input.b1.toInt(), count - 1)
+                                Output(state, input.idx + 4, input.b1.toUint(), count - 1)
                             }
                             0xC.toByte() -> {
                                 val count = Ints.fromBytes(0, 0, 0, input.b0l)
@@ -135,7 +134,7 @@ class GraphicDecoder(val data: ByteBuffer) : Iterable<Int> {
                         Output(
                                 state = if(input.count > 1) input.state else State.SN,
                                 idx = input.idx + 1,
-                                colorPoint = data.get(input.idx).toInt(),
+                                colorPoint = data.get(input.idx).toUint(),
                                 count = input.count - 1
                         )
                     }
@@ -151,6 +150,7 @@ class GraphicDecoder(val data: ByteBuffer) : Iterable<Int> {
 
                     else -> throw IllegalStateException("Unexpected state ${input.state}.")
                 }
+
 
                 return output.colorPoint
 
