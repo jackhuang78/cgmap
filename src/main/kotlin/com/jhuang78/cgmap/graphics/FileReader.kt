@@ -2,8 +2,10 @@ package com.jhuang78.cgmap.graphics
 
 import com.google.common.base.Preconditions.checkElementIndex
 import com.google.common.base.Preconditions.checkArgument
+import com.google.common.primitives.Ints
 import com.google.common.primitives.Longs
 import java.awt.Color
+import java.awt.Point
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 import java.nio.file.Files
@@ -19,8 +21,24 @@ fun Byte.toUint()  = (this.toInt() and 0x000000FF)
 
 val INFO_ENTRY_SIZE = 40L
 class InfoFileReader(val path: Path): AutoCloseable {
-    val fc = FileChannel.open(path, StandardOpenOption.READ);
+    private val fc = FileChannel.open(path, StandardOpenOption.READ);
     val size = (fc.size() / INFO_ENTRY_SIZE).toInt()
+    private val mapNoToEntryNo = {
+        val map = mutableMapOf<Int, Int>()
+        for(i in 0..size-1) {
+            val info = read(i)
+            // TODO: there shouldn't be any duplicated
+            if(info.mapNo !in map) {
+                map.put(info.mapNo, i)
+            }
+        }
+        map.toMap()
+    }()
+
+    fun readMapEntry(mapNo: Int): GraphicInfo {
+        val entryNo = mapNoToEntryNo[mapNo] ?: 0
+        return read(checkNotNull(entryNo))
+    }
 
     fun read(entryNo: Int): GraphicInfo {
         checkElementIndex(entryNo, size)
@@ -48,7 +66,7 @@ class InfoFileReader(val path: Path): AutoCloseable {
                     Longs.fromBytes(0, 0, 0, b5, b4, b3, b2, b1)
                 }(),
                 mapNo = buffer.getInt()
-            ).validate()
+            )//.validate()
 
     }
 
@@ -58,15 +76,21 @@ class InfoFileReader(val path: Path): AutoCloseable {
 }
 
 class DataFileReader(val path: Path) : AutoCloseable {
-    val fc = FileChannel.open(path, StandardOpenOption.READ)
+    private val fc = FileChannel.open(path, StandardOpenOption.READ)
+    private var prevPos = -1
+    private var prevData = GraphicData()
 
     fun read(position: Int, size: Int): GraphicData {
         checkElementIndex(position, fc.size().toInt())
 
+        if(position == prevPos) {
+            return prevData
+        }
+
         val buffer = fc
                 .map(FileChannel.MapMode.READ_ONLY, position.toLong(), size.toLong())
                 .order(ByteOrder.LITTLE_ENDIAN);
-        return GraphicData(
+        val data = GraphicData(
                 magic = buffer.getShort().toUint(),
                 version = buffer.get().toUint(),
                 unknown = buffer.get().toUint(),
@@ -75,6 +99,11 @@ class DataFileReader(val path: Path) : AutoCloseable {
                 dataLength = buffer.getInt(),
                 data = buffer.slice().asReadOnlyBuffer()
         ).validate()
+
+        prevData = data
+        prevPos = position
+
+        return data
     }
 
     override fun close() {
@@ -144,6 +173,66 @@ class PaletFileReader(val dir: Path) {
         }
     }
 
+    fun palets(): List<Path> {
+        return Files.list(dir).map {
+            dir.relativize(it)
+        }.toList()
+    }
+}
+
+val MAP_FILE_HEADER = 20
+val MAP_VALID_MAGIC = Ints.fromBytes(0, 'P'.toByte(), 'A'.toByte(), 'M'.toByte())
+class MapFileReader(val path: Path): AutoCloseable {
+    private val fc = FileChannel.open(path, StandardOpenOption.READ)
+    private val buf = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size())
+            .order(ByteOrder.LITTLE_ENDIAN);
+    val magic = {
+        val magic = Ints.fromBytes(0, buf.get(2), buf.get(1), buf.get(0))
+        checkArgument(magic == MAP_VALID_MAGIC, "Expect magic to be ${MAP_VALID_MAGIC}, but got ${magic}")
+        magic
+    }
+    val width = buf.getInt(12)
+    val height = buf.getInt(16)
+    val size = width * height
+
+    fun read(east: Int, south: Int): MapTile {
+        val groundIdx = MAP_FILE_HEADER + (south * width + east) * 2
+        val itemIdx = groundIdx + size*2
+        val markIdx = itemIdx + size*2
+        return MapTile(
+                ground = buf.getShort(groundIdx).toUint(),
+                item = buf.getShort(itemIdx).toUint(),
+                mark = buf.getShort(markIdx).toUint()
+        )
+    }
+
+    fun readView(east: Int, south: Int, width: Int, height: Int, infoFileReader: InfoFileReader): MapView {
+
+        val tiles = mutableListOf<MapTileInfo>()
+        for(j in 0..height-1) {
+            for(i in 0..width-1) {
+                val tile = read(east + i, south + j)
+                tiles.add(MapTileInfo(
+                        ground = infoFileReader.readMapEntry(tile.ground),
+                        item = infoFileReader.readMapEntry(tile.item),
+                        mark = tile.mark,
+                        border = (south + j == 0 || south +j == this.height - 1 || east + i == 0 || east + i == this.width - 1),
+                        loc = Point(east+i, south+j))
+                )
+            }
+        }
+
+        return MapView(
+                width = width,
+                height = height,
+                tiles = tiles.toList()
+        )
+
+    }
+
+    override fun close() {
+        fc.close()
+    }
 }
 
 

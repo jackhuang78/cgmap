@@ -1,38 +1,61 @@
 package com.jhuangyc.cgmap
 
 import com.jhuang78.cgmap.graphics.*
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Graphics2D
+import java.awt.*
+import java.nio.file.Path
 import java.nio.file.Paths
-import javax.swing.JFrame
-import javax.swing.JPanel
+import javax.swing.*
 
 fun main(args: Array<String>) {
     print("GraphicViewer")
-
-    
 
     val infoFileReader = InfoFileReader(Paths.get("data/GraphicInfo_66.bin"))
     val dataFileReader = DataFileReader(Paths.get("data/Graphic_66.bin"))
     val paletFileReader = PaletFileReader(Paths.get("data/pal"))
 
-    val info = infoFileReader.read(123)
-    val data = dataFileReader.read(info.address, info.dataLength)
-    val palet = paletFileReader.read(Paths.get("palet_00.cgp"))
+    var info = infoFileReader.read(0)
+    var data = dataFileReader.read(info.address, info.dataLength)
+    var palet = paletFileReader.read(Paths.get("palet_00.cgp"))
 
-    val panel = object: JPanel() {
+    val infoTextArea = JTextArea()
+    infoTextArea.isEditable = false
+    infoTextArea.lineWrap = true
+    infoTextArea.columns = 20
+    val infoPanel = JPanel(BorderLayout())
+    infoPanel.add(infoTextArea)
+
+    val imagePanel = object: JPanel() {
         override fun paint(g: Graphics?) {
-            paintGraphic(g as Graphics2D, info, data, palet, zoom=2)
-        }
-
-        override fun getPreferredSize(): Dimension {
-            return Dimension(640, 400)
+            super.paint(g)
+            infoTextArea.text = "${info}\n\n${data}".replace(",", "\n")
+            paintGraphic(g as Graphics2D, info, data, palet, zoom=2.0)
         }
     }
+    imagePanel.preferredSize = Dimension(640, 480)
+
+    val graphicSelectSpinner = JSpinner(SpinnerNumberModel(0, 0, infoFileReader.size - 1, 1))
+    graphicSelectSpinner.addChangeListener {
+        info = infoFileReader.read((it.source as JSpinner).value as Int)
+        data = dataFileReader.read(info.address, info.dataLength)
+        imagePanel.repaint()
+    }
+    val paletSelectSpinner = JSpinner(SpinnerListModel(paletFileReader.palets()))
+    paletSelectSpinner.addChangeListener {
+        palet = paletFileReader.read((it.source as JSpinner).value as Path)
+        imagePanel.repaint()
+    }
+
+
+    val controlPanel = JPanel(GridLayout(1, 3, 5, 5))
+    controlPanel.add(graphicSelectSpinner)
+    controlPanel.add(paletSelectSpinner)
+
+
+
     val frame = JFrame("GraphicViewer")
-    frame.add(panel, BorderLayout.CENTER)
+    frame.add(imagePanel, BorderLayout.CENTER)
+    frame.add(controlPanel, BorderLayout.SOUTH)
+    frame.add(infoPanel, BorderLayout.EAST)
     frame.pack()
     frame.isVisible = true
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE

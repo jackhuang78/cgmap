@@ -1,18 +1,23 @@
 package com.jhuang78.cgmap.graphics
 
-import com.google.common.io.Resources.getResource
+import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.*
 import java.awt.Color
+import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.test.assertFailsWith
+
+fun getResource(path: String): Path {
+    return Paths.get(Resources.getResource(path).path)
+}
 
 class FileReaderTest : Spek({
 
     describe("an InfoFileReader") {
         given("a valid input file") {
-            val path = Paths.get(getResource("GraphicInfo_66_small.bin").path)
+            val path = getResource("GraphicInfo_66_small.bin")
             val reader = InfoFileReader(path)
             it("should know number of entries") {
                 assertThat(reader.size).isEqualTo(2)
@@ -58,10 +63,9 @@ class FileReaderTest : Spek({
         given("an invalid input") {
             arrayOf(".", "random.bin").forEach {
                 context("path=${it}") {
-                    val path = Paths.get(getResource(it).path)
                     it("should fail to read an entry") {
                         assertFailsWith<Exception> {
-                            InfoFileReader(path).read(0)
+                            InfoFileReader(getResource(it)).read(0)
                         }
                     }
                 }
@@ -71,7 +75,7 @@ class FileReaderTest : Spek({
 
     describe("an DataFileReader") {
         given("an valid input file") {
-            val path = Paths.get(getResource("Graphic_66_0_424.bin").path)
+            val path = getResource("Graphic_66_0_424.bin")
             val reader = DataFileReader(path)
 
             it("should read entry correctly") {
@@ -88,7 +92,7 @@ class FileReaderTest : Spek({
 
     describe("a PaletFileReader") {
         given("an valid directory") {
-            val dir = Paths.get(getResource("palet").path)
+            val dir = getResource("palet")
             val reader = PaletFileReader(dir)
 
             given("an valid file") {
@@ -109,6 +113,16 @@ class FileReaderTest : Spek({
                     assertThat(palet.colors[239]).isEqualTo(Color(0x92, 0x53, 0x4D))
                 }
 
+            }
+        }
+    }
+
+    describe("MapFileReader") {
+        given("an valid file") {
+            it("should read header correctly") {
+                val reader = MapFileReader(getResource("map/0/100.dat"))
+                assertThat(reader.width).isEqualTo(0x0348)
+                assertThat(reader.height).isEqualTo(0x0262)
             }
         }
     }
