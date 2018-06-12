@@ -29,8 +29,8 @@ data class GraphicInfo(
         checkState(imageHeight >= 0, "Expect non-negative imageHeight, but got ${imageHeight}.")
         checkState(occupyEast >= 0, "Expect non-negative occupyEast, but got ${occupyEast}.")
         checkState(occupySouth >= 0, "Expect non-negative occupySouth, but got ${occupySouth}.")
-        //TODO: for 7480 to 7498, mark is 45 for unknown reason
-        //checkState(mark in INFO_VALID_MARK, "Expect mark to be one of ${INFO_VALID_MARK}, but got ${mark}.")
+        //TODO: for 7480 to 7498, mapMarker is 45 for unknown reason
+        //checkState(mapMarker in INFO_VALID_MARK, "Expect mapMarker to be one of ${INFO_VALID_MARK}, but got ${mapMarker}.")
         checkState(mapNo >= 0, "Expect non-negative mapNo, but got ${mapNo}.")
         return this
     }
