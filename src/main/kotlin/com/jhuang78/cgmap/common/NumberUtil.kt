@@ -1,5 +1,6 @@
 package com.jhuang78.cgmap.common
 
+import com.google.common.primitives.UnsignedBytes
 import java.nio.ByteBuffer
 
 /**
@@ -10,7 +11,7 @@ fun Short.toUint() = (this.toInt() and 0x0000FFFF)
 /**
  * Unsigned-extends a byte to an int.
  */
-fun Byte.toUint() = (this.toInt() and 0x000000FF)
+fun Byte.toUint() =  (this.toInt() and 0x000000FF)
 
 /**
  * Converts a byte into hex string format
@@ -21,7 +22,7 @@ fun Byte.toHex() = "%02x".format(this)
  *
  */
 fun Byte.bits(msb: Int, lsb: Int)
-		= (this.toUint() shr lsb) and (0x000000FF ushr (8 - msb + lsb))
+		= (this.toUint() shr lsb) and (0x000000FF ushr (7 - msb + lsb))
 
 /**
  * Converts an int into hex string format
