@@ -157,13 +157,13 @@ fun List<Int?>.appendRandom(n: Int, r: Random): List<Int?> {
 }
 
 fun List<Int?>.appendRepeated(n: Int, v: Int?): List<Int?> {
-	val ml = if (this is MutableList<Int?>) this else this.toMutableList()
+	val ml = this.toMutableList()
 	ml.addAll((1..n).map { v })
 	return ml
 }
 
 fun List<Int?>.append(vararg vs: Int?): List<Int?> {
-	val ml = if (this is MutableList<Int?>) this else this.toMutableList()
+	val ml = this.toMutableList()
 	ml.addAll(vs.toList())
 	return ml
 }
