@@ -1,7 +1,6 @@
 package com.jhuang78.cgmap.io
 
 import com.google.common.base.Preconditions.checkElementIndex
-import com.google.common.base.Preconditions.checkState
 import com.google.common.primitives.Longs
 import com.jhuang78.cgmap.io.GraphicInfo.MapMarker.FLOOR
 import com.jhuang78.cgmap.io.GraphicInfo.MapMarker.OBSTACLE
@@ -39,18 +38,13 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 	fun read(entryNo: Int): GraphicInfo {
 		checkElementIndex(entryNo, numberOfEntries)
 
-		val buffer = fileChannel.map(READ_ONLY,
-				entryNo * GRAPHIC_INFO_ENTRY_SIZE,
+		val buffer = fileChannel.map(READ_ONLY, entryNo * GRAPHIC_INFO_ENTRY_SIZE,
 				GRAPHIC_INFO_ENTRY_SIZE).order(LITTLE_ENDIAN)
 
-		return GraphicInfo(graphicNo = buffer.getInt(),
-				address = buffer.getInt(),
-				dataLength = buffer.getInt(),
-				offsetX = buffer.getInt(),
-				offsetY = buffer.getInt(),
-				imageWidth = buffer.getInt(),
-				imageHeight = buffer.getInt(),
-				occupyEast = buffer.get().toInt(),
+		return GraphicInfo(graphicNo = buffer.getInt(), address = buffer.getInt(),
+				dataLength = buffer.getInt(), offsetX = buffer.getInt(),
+				offsetY = buffer.getInt(), imageWidth = buffer.getInt(),
+				imageHeight = buffer.getInt(), occupyEast = buffer.get().toInt(),
 				occupySouth = buffer.get().toInt(), // TODO: for 7480 to 7498, mapMarker is 45 for unknown reason
 				mapMarker = if (buffer.get().toInt() == 0) OBSTACLE else FLOOR,
 				unknown = {
@@ -60,8 +54,7 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 					val b4 = buffer.get()
 					val b5 = buffer.get()
 					Longs.fromBytes(0, 0, 0, b5, b4, b3, b2, b1)
-				}(),
-				mapNo = buffer.getInt())
+				}(), mapNo = buffer.getInt())
 	}
 
 	override fun close() {
@@ -73,16 +66,13 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
  * Validates a GraphicInfo.
  */
 fun GraphicInfo.validate(): GraphicInfo {
-	listOf(Pair(graphicNo, "GraphicNo"),
-			Pair(address, "Address"),
-			Pair(dataLength, "DataLength"),
-			Pair(imageWidth, "ImageWidth"),
-			Pair(imageHeight, "ImageHeight"),
-			Pair(occupyEast, "OccupyEast"),
-			Pair(occupySouth, "OccupySouth"),
-			Pair(mapNo, "MapNo")).forEach {
-		checkState(it.first >= 0,
-				"Expect non-negative value for ${it.second}, but got ${it.first}")
+	listOf(Pair(graphicNo, "GraphicNo"), Pair(address, "Address"),
+			Pair(dataLength, "DataLength"), Pair(imageWidth, "ImageWidth"),
+			Pair(imageHeight, "ImageHeight"), Pair(occupyEast, "OccupyEast"),
+			Pair(occupySouth, "OccupySouth"), Pair(mapNo, "MapNo")).forEach {
+		check(it.first >= 0, {
+			"Expect non-negative value for ${it.second}, but got ${it.first}"
+		})
 	}
 
 	return this

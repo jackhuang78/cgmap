@@ -63,7 +63,7 @@ class PaletDirectoryReader(private val directory: Path) {
 				254 -> Color(0xFF, 0xFF, 0x00)
 				255 -> Color(0xFF, 0xFF, 0xFF)
 
-				else -> throw AssertionError()
+				else -> error(AssertionError())
 			}
 		})
 	}

@@ -63,7 +63,7 @@ compileTestKotlin {
     }
 }
 
-task runGraphicInofFileViewer(type: JavaExec) {
+task runGraphicInfoFileViewer(type: JavaExec) {
     main = 'com.jhuang78.cgmap.tool.GraphicInfoFileViewer'
     classpath = sourceSets.main.runtimeClasspath
 }

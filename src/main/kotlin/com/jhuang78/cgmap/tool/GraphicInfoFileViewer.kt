@@ -33,20 +33,22 @@ fun main(args: Array<String>) = object : CliktCommand() {
 		println("Graphic file: ${graphicFile}")
 		println()
 
+		// Read and display GraphicInfo
 		val graphicInfo = GraphicInfoFileReader(Paths.get(graphicInfoFile)).use {
 			it.read(entry)
 		}
 		println(graphicInfo.toString().replace(",", "\n"))
 		println()
 
+		// Read and display Graphic
 		val graphic = GraphicFileReader(Paths.get(graphicFile)).use {
 			it.read(graphicInfo.address, graphicInfo.dataLength)
 		}
 		println(graphic.toString().replace(",", "\n"))
 		println()
+		
+		println("Graphic.data")
 		println(graphic.data.illustrate())
-
-
 	}
 }.main(if (args.isNotEmpty()) args else
 // hardcoded arguments for convenience
