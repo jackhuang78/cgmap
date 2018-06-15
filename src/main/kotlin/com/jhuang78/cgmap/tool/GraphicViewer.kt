@@ -8,12 +8,12 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import com.jhuang78.cgmap.util.illustrate
 import com.jhuang78.cgmap.entity.PaintedGraphic
 import com.jhuang78.cgmap.io.GraphicFileReader
 import com.jhuang78.cgmap.io.GraphicInfoFileReader
 import com.jhuang78.cgmap.io.readPaletFile
 import com.jhuang78.cgmap.io.writePaintedGraphic
+import com.jhuang78.cgmap.util.illustrate
 import mu.KotlinLogging
 import java.awt.Graphics
 import java.nio.file.Paths
@@ -70,9 +70,9 @@ fun main(args: Array<String>) = object : CliktCommand() {
 			val palet = readPaletFile(Paths.get(paletFile))
 			val paintedGraphic = PaintedGraphic(graphic,
 					graphicInfo, palet)
+
 			writePaintedGraphic(Paths.get("out", paintedGraphic.preferredName),
 					paintedGraphic)
-
 
 			JFrame("GraphicFileViewer").let {
 				it.add(object : JPanel() {

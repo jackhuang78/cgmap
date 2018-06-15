@@ -1,4 +1,4 @@
-package com.jhuang78.cgmap.graphics
+package com.jhuang78.cgmap.painter
 
 import com.jhuang78.cgmap.util.asIterable
 import com.jhuang78.cgmap.util.toUint
@@ -9,9 +9,12 @@ import com.jhuang78.cgmap.entity.Palet
 import java.awt.Graphics2D
 import java.awt.Point
 
-fun paintGraphic(g: Graphics2D, info: GraphicInfo,
-								 graphic: Graphic, palet: Palet,
-								 origin: Point = Point(0, 0)) {
+fun paintGraphic(
+		g: Graphics2D,
+		info: GraphicInfo,
+		graphic: Graphic,
+		palet: Palet,
+		origin: Point = Point(0, 0)) {
 
 	val colorIterator = when (graphic.version) {
 		Graphic.Version.RAW -> graphic.data.asIterable().map { it.toUint() }
