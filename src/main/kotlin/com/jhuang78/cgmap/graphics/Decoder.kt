@@ -2,7 +2,7 @@ package com.jhuang78.cgmap.graphics
 
 import com.google.common.base.Preconditions.checkState
 import com.google.common.primitives.Ints
-import com.jhuang78.cgmap.common.toUint
+import com.jhuang78.cgmap.util.toUint
 import java.nio.ByteBuffer
 
 fun ByteBuffer.getDataByteAt(idx: Int): Byte {

@@ -8,7 +8,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import com.jhuang78.cgmap.common.illustrate
+import com.jhuang78.cgmap.util.illustrate
 import com.jhuang78.cgmap.entity.PaintedGraphic
 import com.jhuang78.cgmap.io.GraphicFileReader
 import com.jhuang78.cgmap.io.GraphicInfoFileReader
@@ -88,4 +88,4 @@ fun main(args: Array<String>) = object : CliktCommand() {
 	}
 }.main(if (args.isNotEmpty()) args else
 // hardcoded arguments for convenience
-	arrayOf("data/GraphicInfo_66.bin", "data/Graphic_66.bin", "100", "--paint"))
+	arrayOf("data/GraphicInfo_66.bin", "data/Graphic_66.bin", "0", "--paint"))

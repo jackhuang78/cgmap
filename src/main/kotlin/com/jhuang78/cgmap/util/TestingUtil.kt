@@ -1,4 +1,4 @@
-package com.jhuang78.cgmap.common
+package com.jhuang78.cgmap.util
 
 import com.google.common.io.Resources
 import java.nio.file.Path

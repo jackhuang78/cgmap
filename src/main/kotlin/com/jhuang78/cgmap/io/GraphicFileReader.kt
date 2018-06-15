@@ -1,7 +1,7 @@
 package com.jhuang78.cgmap.io
 
 import com.google.common.base.Preconditions.checkElementIndex
-import com.jhuang78.cgmap.common.toUint
+import com.jhuang78.cgmap.util.toUint
 import com.jhuang78.cgmap.entity.Graphic
 import com.jhuang78.cgmap.entity.Graphic.Version.ENCODED
 import com.jhuang78.cgmap.entity.Graphic.Version.RAW

@@ -1,7 +1,7 @@
 package com.jhuang78.cgmap.graphics
 
-import com.jhuang78.cgmap.common.asIterable
-import com.jhuang78.cgmap.common.toUint
+import com.jhuang78.cgmap.util.asIterable
+import com.jhuang78.cgmap.util.toUint
 import com.jhuang78.cgmap.entity.Graphic
 import com.jhuang78.cgmap.io.GraphicDataDecoder
 import com.jhuang78.cgmap.entity.GraphicInfo

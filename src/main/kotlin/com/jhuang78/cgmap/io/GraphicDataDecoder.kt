@@ -1,8 +1,8 @@
 package com.jhuang78.cgmap.io
 
-import com.jhuang78.cgmap.common.asIterable
-import com.jhuang78.cgmap.common.bits
-import com.jhuang78.cgmap.common.toUint
+import com.jhuang78.cgmap.util.asIterable
+import com.jhuang78.cgmap.util.bits
+import com.jhuang78.cgmap.util.toUint
 import java.nio.ByteBuffer
 
 /**

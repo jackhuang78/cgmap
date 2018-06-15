@@ -1,6 +1,6 @@
 package com.jhuang78.cgmap.io
 
-import com.jhuang78.cgmap.common.toUint
+import com.jhuang78.cgmap.util.toUint
 import com.jhuang78.cgmap.entity.Palet
 import java.awt.Color
 import java.nio.channels.FileChannel

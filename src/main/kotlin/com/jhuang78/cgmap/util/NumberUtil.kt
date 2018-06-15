@@ -1,4 +1,4 @@
-package com.jhuang78.cgmap.common
+package com.jhuang78.cgmap.util
 
 /**
  * Unsigned-extends a short to an int.
