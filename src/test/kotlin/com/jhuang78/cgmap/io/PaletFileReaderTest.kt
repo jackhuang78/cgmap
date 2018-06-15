@@ -9,7 +9,7 @@ import org.jetbrains.spek.api.dsl.it
 import java.awt.Color
 import java.nio.file.Paths
 
-class PaletFileReader : Spek({
+class PaletFileReaderTest : Spek({
 
 	describe("readPaletFile()") {
 

@@ -206,7 +206,7 @@
 //        )
 //    }
 //
-//    fun readView(east: Int, south: Int, width: Int, height: Int, infoFileReader: InfoFileReader): MapView {
+//    fun readView(east: Int, south: Int, width: Int, height: Int, infoFileReader: InfoFileReader): Map {
 //
 //        val tiles = mutableListOf<MapTileInfo>()
 //        for(j in 0..height-1) {
@@ -222,7 +222,7 @@
 //            }
 //        }
 //
-//        return MapView(
+//        return Map(
 //                width = width,
 //                height = height,
 //                tiles = tiles.toList()
