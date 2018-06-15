@@ -2,8 +2,9 @@ package com.jhuang78.cgmap.io
 
 import com.google.common.base.Preconditions.checkElementIndex
 import com.google.common.primitives.Longs
-import com.jhuang78.cgmap.io.GraphicInfo.MapMarker.FLOOR
-import com.jhuang78.cgmap.io.GraphicInfo.MapMarker.OBSTACLE
+import com.jhuang78.cgmap.entity.GraphicInfo
+import com.jhuang78.cgmap.entity.GraphicInfo.MapMarker.FLOOR
+import com.jhuang78.cgmap.entity.GraphicInfo.MapMarker.OBSTACLE
 import java.nio.ByteOrder.LITTLE_ENDIAN
 import java.nio.channels.FileChannel
 import java.nio.channels.FileChannel.MapMode.READ_ONLY
@@ -41,7 +42,8 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 		val buffer = fileChannel.map(READ_ONLY, entryNo * GRAPHIC_INFO_ENTRY_SIZE,
 				GRAPHIC_INFO_ENTRY_SIZE).order(LITTLE_ENDIAN)
 
-		return GraphicInfo(graphicNo = buffer.getInt(), address = buffer.getInt(),
+		return GraphicInfo(graphicNo = buffer.getInt(),
+				address = buffer.getInt(),
 				dataLength = buffer.getInt(), offsetX = buffer.getInt(),
 				offsetY = buffer.getInt(), imageWidth = buffer.getInt(),
 				imageHeight = buffer.getInt(), occupyEast = buffer.get().toInt(),

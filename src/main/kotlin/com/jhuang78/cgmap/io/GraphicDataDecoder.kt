@@ -108,7 +108,7 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 			0 -> Section.S0
 			2 -> Section.S2
 			3 -> Section.S3
-			else -> error("Invalid section name ${sectionName}")
+			else -> error("Invalid section preferredName ${sectionName}")
 		}
 
 		// When in Section 2, skip byte 1 is not part of color size

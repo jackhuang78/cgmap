@@ -9,9 +9,17 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import com.jhuang78.cgmap.common.illustrate
-import com.jhuang78.cgmap.io.*
+import com.jhuang78.cgmap.entity.PaintedGraphic
+import com.jhuang78.cgmap.io.GraphicFileReader
+import com.jhuang78.cgmap.io.GraphicInfoFileReader
+import com.jhuang78.cgmap.io.readPaletFile
+import com.jhuang78.cgmap.io.writePaintedGraphic
 import mu.KotlinLogging
+import java.awt.Graphics
 import java.nio.file.Paths
+import javax.swing.JFrame
+import javax.swing.JFrame.EXIT_ON_CLOSE
+import javax.swing.JPanel
 
 /**
  * Logger for this file.
@@ -28,7 +36,7 @@ fun main(args: Array<String>) = object : CliktCommand() {
 			help = "The Graphic file (e.g. Graphic.bin)")
 	val entry: Int by argument(help = "The entry to display").int()
 	val paint: Boolean by option(
-			help = "Paint the Graphic into an image file").flag("-p")
+			help = "Paint the Graphic into an image file").flag()
 	val paletFile: String by option(
 			help = "The Palet file (e.g. palet/palet_00.cgp)"
 	).default("data/palet/palet_00.cgp")
@@ -59,13 +67,25 @@ fun main(args: Array<String>) = object : CliktCommand() {
 
 		if (paint) {
 			println("Painting Graphic")
-			val palet = PaletDirectoryReader(Paths.get(paletFile).parent).read(
-					Paths.get(paletFile).fileName)
+			val palet = readPaletFile(Paths.get(paletFile))
+			val paintedGraphic = PaintedGraphic(graphic,
+					graphicInfo, palet)
+			writePaintedGraphic(Paths.get("out", paintedGraphic.preferredName),
+					paintedGraphic)
 
-			val paintedGraphic = PaintedGraphic(graphic, graphicInfo, palet)
-			writePaintedGraphic(Paths.get("out", paintedGraphic.name), paintedGraphic)
+
+			JFrame("GraphicFileViewer").let {
+				it.add(object : JPanel() {
+					override fun paint(g: Graphics?) {
+						g!!.drawImage(paintedGraphic.image, 0, 0, null)
+					}
+				}).let { it.preferredSize = paintedGraphic.preferredSize }
+				it.pack()
+				it.isVisible = true
+				it.defaultCloseOperation = EXIT_ON_CLOSE
+			}
 		}
 	}
 }.main(if (args.isNotEmpty()) args else
 // hardcoded arguments for convenience
-	arrayOf("data/GraphicInfo_66.bin", "data/Graphic_66.bin", "10", "--paint"))
+	arrayOf("data/GraphicInfo_66.bin", "data/Graphic_66.bin", "100", "--paint"))

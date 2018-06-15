@@ -1,5 +1,6 @@
 package com.jhuang78.cgmap.io
 
+import com.jhuang78.cgmap.entity.PaintedGraphic
 import java.nio.file.Path
 import javax.imageio.ImageIO
 

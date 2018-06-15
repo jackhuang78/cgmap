@@ -1,6 +1,4 @@
-package com.jhuang78.cgmap.io
-
-import com.google.common.base.Preconditions.checkState
+package com.jhuang78.cgmap.entity
 
 /**
  * A GraphicInfo contains the metadata of a Graphic.

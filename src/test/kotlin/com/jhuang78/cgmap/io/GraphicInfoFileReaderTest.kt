@@ -1,21 +1,23 @@
 package com.jhuang78.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
-import com.jhuang78.cgmap.common.getPathForResource
+import com.jhuang78.cgmap.common.underResource
+import com.jhuang78.cgmap.entity.GraphicInfo
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import java.io.IOException
+import java.nio.file.Paths
 import kotlin.test.assertFailsWith
 
 
 class GraphicInfoFileReaderTest : Spek({
 
-	describe("an GraphicInfoFileReader") {
+	describe("GraphicInfoFileReader()") {
 		given("a valid input file") {
 			val reader = GraphicInfoFileReader(
-					getPathForResource("GraphicInfo_66_small.bin"))
+					Paths.get("GraphicInfo_66_small.bin").underResource())
 
 			it("should know number of entries") {
 				assertThat(reader.numberOfEntries).isEqualTo(2)
@@ -37,7 +39,8 @@ class GraphicInfoFileReaderTest : Spek({
 				assertThat(info0.imageHeight).isEqualTo(47);
 				assertThat(info0.occupyEast).isEqualTo(1);
 				assertThat(info0.occupySouth).isEqualTo(1);
-				assertThat(info0.mapMarker).isEqualTo(GraphicInfo.MapMarker.FLOOR);
+				assertThat(info0.mapMarker).isEqualTo(
+						GraphicInfo.MapMarker.FLOOR);
 				assertThat(info0.mapNo).isEqualTo(0x03e7);
 
 				val info1 = reader.read(1);
@@ -50,7 +53,8 @@ class GraphicInfoFileReaderTest : Spek({
 				assertThat(info1.imageHeight).isEqualTo(48);
 				assertThat(info1.occupyEast).isEqualTo(1);
 				assertThat(info1.occupySouth).isEqualTo(1);
-				assertThat(info1.mapMarker).isEqualTo(GraphicInfo.MapMarker.OBSTACLE);
+				assertThat(info1.mapMarker).isEqualTo(
+						GraphicInfo.MapMarker.OBSTACLE);
 				assertThat(info1.mapNo).isEqualTo(0x0012);
 			}
 
@@ -62,7 +66,7 @@ class GraphicInfoFileReaderTest : Spek({
 		}
 
 		given("a directory as input file") {
-			val reader = GraphicInfoFileReader(getPathForResource("."))
+			val reader = GraphicInfoFileReader(Paths.get(".").underResource())
 
 			it("should fail to read an entry") {
 				assertFailsWith<IOException> {
@@ -72,7 +76,8 @@ class GraphicInfoFileReaderTest : Spek({
 		}
 
 		given("an invalid input file") {
-			val reader = GraphicInfoFileReader(getPathForResource("random.bin"))
+			val reader = GraphicInfoFileReader(
+					Paths.get("random.bin").underResource())
 
 			it("should fail to read an valid entry") {
 				assertFailsWith<IllegalStateException> {

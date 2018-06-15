@@ -20,8 +20,11 @@ fun ByteBuffer.illustrate(): String {
 	return sb.toString()
 }
 
+/**
+ * Provides a view of the ByteBuffer in the form of Iterable
+ */
 fun ByteBuffer.asIterable(start: Int = 0,
-													end: Int = this.capacity()): Iterable<Byte> {
+		end: Int = this.capacity()): Iterable<Byte> {
 
 	return object : Iterable<Byte> {
 

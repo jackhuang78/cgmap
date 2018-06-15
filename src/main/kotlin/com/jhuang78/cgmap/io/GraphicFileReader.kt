@@ -2,8 +2,9 @@ package com.jhuang78.cgmap.io
 
 import com.google.common.base.Preconditions.checkElementIndex
 import com.jhuang78.cgmap.common.toUint
-import com.jhuang78.cgmap.io.Graphic.Version.ENCODED
-import com.jhuang78.cgmap.io.Graphic.Version.RAW
+import com.jhuang78.cgmap.entity.Graphic
+import com.jhuang78.cgmap.entity.Graphic.Version.ENCODED
+import com.jhuang78.cgmap.entity.Graphic.Version.RAW
 import mu.KotlinLogging
 import java.nio.ByteOrder.LITTLE_ENDIAN
 import java.nio.channels.FileChannel
@@ -47,7 +48,8 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 		val buffer = fileChannel.map(READ_ONLY, position.toLong(),
 				size.toLong()).order(LITTLE_ENDIAN);
 
-		val graphic = Graphic(magic = buffer.getShort().toUint(),
+		val graphic = Graphic(
+				magic = buffer.getShort().toUint(),
 				version = if (buffer.get().toUint() == 0) RAW else ENCODED,
 				unknown = buffer.get().toUint(), width = buffer.getInt(),
 				height = buffer.getInt(),

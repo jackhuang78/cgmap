@@ -2,10 +2,10 @@ package com.jhuang78.cgmap.graphics
 
 import com.jhuang78.cgmap.common.asIterable
 import com.jhuang78.cgmap.common.toUint
-import com.jhuang78.cgmap.io.Graphic
+import com.jhuang78.cgmap.entity.Graphic
 import com.jhuang78.cgmap.io.GraphicDataDecoder
-import com.jhuang78.cgmap.io.GraphicInfo
-import com.jhuang78.cgmap.io.Palet
+import com.jhuang78.cgmap.entity.GraphicInfo
+import com.jhuang78.cgmap.entity.Palet
 import java.awt.Graphics2D
 import java.awt.Point
 

@@ -1,4 +1,4 @@
-package com.jhuang78.cgmap.io
+package com.jhuang78.cgmap.entity
 
 import java.awt.Color
 
