@@ -6,8 +6,8 @@
 //import java.util.*
 //import kotlin.coroutines.experimental.buildIterator
 //
-//
 //fun paintGraphic(g: Graphics2D, info: GraphicInfo, data: GraphicData, palet: GraphicPalet, zoom: Double = 1.0, origin: Point = Point(0, 0)) {
+//
 //    val decoder = if (data.isCompressed())
 //        CompressedDataDecoder(data.data)
 //    else

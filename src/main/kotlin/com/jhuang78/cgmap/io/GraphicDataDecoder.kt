@@ -1,5 +1,6 @@
 package com.jhuang78.cgmap.io
 
+import com.jhuang78.cgmap.common.asIterable
 import com.jhuang78.cgmap.common.bits
 import com.jhuang78.cgmap.common.toUint
 import java.nio.ByteBuffer
@@ -94,13 +95,11 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 	private fun parseHeader(state: State): Triple<Section, Int, Int> {
 		// Up to the first four bytes are the section header
 		// Using MutableList as a queue
-		val headerBytes = (0 until 4)
-				.map { state.startIdx + it }
-				.map { if (it < data.capacity()) data[it] else null }
-				.toMutableList()
+
+		val byteIterator = data.asIterable(start = state.startIdx).iterator()
 
 		// Extract info from byte 0
-		val byte0 = headerBytes.removeAt(0)!!
+		val byte0 = byteIterator.next()
 		val sectionName = byte0.bits(7, 6)
 		val numColorSize = byte0.bits(5, 4)
 		var numColors = byte0.bits(3, 0)
@@ -114,13 +113,13 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 
 		// When in Section 2, skip byte 1 is not part of color size
 		if (section == Section.S2) {
-			headerBytes.removeAt(0)
+			byteIterator.next()
 		}
 
 		// Calculate number of colors in this section
 		check(numColorSize < 3)
 		for (i in 0 until numColorSize) {
-			numColors = (numColors shl 8) + headerBytes.removeAt(0)!!.toUint()
+			numColors = (numColors shl 8) + byteIterator.next().toUint()
 		}
 
 		return Triple(section, numColorSize, numColors)
