@@ -3,7 +3,6 @@ package com.jhuangyc.cgmap.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
@@ -51,11 +50,6 @@ object Graphic : CliktCommand(help = "Show info for a Graphic entity") {
 			help = "The file to save the painted Graphic. GUI if not specified.")
 			.path(folderOkay = false)
 
-	private val dataDir: Path by option(
-			help = "The directory where all data files reside")
-			.path(exists = true, fileOkay = false)
-			.default(Paths.get(".", "data"))
-
 	private val outputDir: Path by option(
 			help = "The directory where outputs are written to")
 			.path(exists = true, fileOkay = false)
@@ -64,21 +58,18 @@ object Graphic : CliktCommand(help = "Show info for a Graphic entity") {
 	private val graphicInfoFile: Path by option(
 			help = "The GraphicInfo file (.bin)")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy {
-				dataDir.resolve("GraphicInfo_66.bin")
-			}
+			.default(Paths.get("data", "GraphicInfo_66.bin"))
+
 
 	private val graphicFile: Path by option(
 			help = "The Graphic file (.bin)")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy {
-				dataDir.resolve("Graphic_66.bin")
-			}
+			.default(Paths.get("data", "Graphic_66.bin"))
 
 	private val paletFile: Path by option(
 			help = "The Palet file (.cgp) to use for painting the graphic")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy { dataDir.resolve("palet/palet_00.cgp") }
+			.default(Paths.get("data", "palet", "palet_00.cgp"))
 	//endregion
 
 	override fun run() {
