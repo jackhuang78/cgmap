@@ -26,16 +26,19 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 			.flag()
 
 	private val graphicInfoFile: Path by option(
+			"--graphic_info_file",
 			help = "The GraphicInfo file (.bin)")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "GraphicInfo_66.bin"))
 
 	private val graphicFile: Path by option(
+			"--graphic_file",
 			help = "The Graphic file (.bin)")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "Graphic_66.bin"))
 
 	private val paletFile: Path by option(
+			"--palet_file",
 			help = "The Palet file (.cgp) to use for painting the graphic")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "palet", "palet_00.cgp"))
