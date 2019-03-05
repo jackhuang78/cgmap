@@ -53,6 +53,6 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 		echo("  EastLength = ${map.eastLength}")
 		echo("  SouthLength = ${map.southLength}")
 
-
+		// TODO: show map view on screen
 	}
 }
