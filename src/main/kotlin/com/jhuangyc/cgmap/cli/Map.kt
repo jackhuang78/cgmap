@@ -19,11 +19,6 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 			help = "The Map file (.dat)")
 			.path()
 
-	private val dataDir: Path by option(
-			help = "The directory where all data files reside")
-			.path(exists = true, fileOkay = false)
-			.default(Paths.get(".", "data"))
-
 	private val outputDir: Path by option(
 			help = "The directory where outputs are written to")
 			.path(exists = true, fileOkay = false)
@@ -36,25 +31,22 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 	private val graphicInfoFile: Path by option(
 			help = "The GraphicInfo file (.bin)")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy {
-				dataDir.resolve("GraphicInfo_66.bin")
-			}
+			.default(Paths.get("data", "GraphicInfo_66.bin"))
+
 
 	private val graphicFile: Path by option(
 			help = "The Graphic file (.bin)")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy {
-				dataDir.resolve("Graphic_66.bin")
-			}
+			.default(Paths.get("data", "Graphic_66.bin"))
 
 	private val paletFile: Path by option(
 			help = "The Palet file (.cgp) to use for painting the graphic")
 			.path(exists = true, folderOkay = false)
-			.defaultLazy { dataDir.resolve("palet/palet_00.cgp") }
+			.default(Paths.get("data", "palet", "palet_00.cgp"))
 
 
 	override fun run() {
-		val map = readMapFile(dataDir.resolve(mapFile))
+		val map = readMapFile(mapFile)
 
 		echo("File ${mapFile}:")
 		echo("  Magic = 0x${map.magic.toHex()}")
