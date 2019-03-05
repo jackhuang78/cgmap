@@ -50,16 +50,10 @@ object Graphic : CliktCommand(help = "Show info for a Graphic entity") {
 			help = "The file to save the painted Graphic. GUI if not specified.")
 			.path(folderOkay = false)
 
-	private val outputDir: Path by option(
-			help = "The directory where outputs are written to")
-			.path(exists = true, fileOkay = false)
-			.default(Paths.get(".", "out"))
-
 	private val graphicInfoFile: Path by option(
 			help = "The GraphicInfo file (.bin)")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "GraphicInfo_66.bin"))
-
 
 	private val graphicFile: Path by option(
 			help = "The Graphic file (.bin)")
@@ -125,7 +119,7 @@ object Graphic : CliktCommand(help = "Show info for a Graphic entity") {
 			} else {
 				//region To file
 				echo("Painting Graphic to file ${outputFile}")
-				paintedGraphic.saveTo(outputDir.resolve(outputFile))
+				paintedGraphic.saveTo(outputFile!!)
 				//endregion
 			}
 		}
