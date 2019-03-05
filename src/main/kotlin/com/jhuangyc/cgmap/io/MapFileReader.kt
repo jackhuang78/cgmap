@@ -11,10 +11,63 @@ import java.nio.channels.FileChannel.MapMode.READ_ONLY
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption.READ
 
+class MapFileReader(private val path: Path) {
+	private val logger = KotlinLogging.logger {}
+
+	companion object {
+		private val VALID_MAP_MAGIC = 0x004D4150  // 'M', 'A', 'P'
+	}
+
+	fun read(): Map {
+		FileChannel.open(path, READ).use { file ->
+			val buffer = file
+					.map(READ_ONLY, 0, file.size())
+					.order(LITTLE_ENDIAN)
+
+			val magic = Ints.fromBytes(0, buffer.get(), buffer.get(), buffer.get())
+			if (magic != VALID_MAP_MAGIC) {
+				logger.warn { "Got unexpected magic ${magic}. Data is likely corrupted." }
+			}
+
+			// Skip the next 9 bytes
+			repeat(9) { buffer.get() }
+
+			val eastLength = buffer.getInt()
+			val southLength = buffer.getInt()
+			val size = eastLength * southLength
+			val floors = List(size) { buffer.getShort().toUint() }
+			val entities = List(size) { buffer.getShort().toUint() }
+			val attributes = List(size) {
+				when (buffer.getShort().toUint()) {
+					0x0000 -> Map.Attribute.VOID
+					0xC000 -> Map.Attribute.FLOOR
+					0xC00A -> Map.Attribute.WRAP
+					0xC100 -> Map.Attribute.SOLID
+					0xC003, 0x4000 -> Map.Attribute.UNKNOWN
+					else -> {
+						logger.warn { "Unexpected attribute ${it.toHex()}" }
+						Map.Attribute.UNKNOWN
+					}
+				}
+			}
+
+			return Map(
+					magic = magic,
+					eastLength = eastLength,
+					southLength = southLength,
+					floors = floors,
+					entities = entities,
+					attributes = attributes)
+		}
+	}
+}
+
+
 const val VALID_MAP_MAGIC = 0x004D4150  // 'M', 'A', 'P'
 
 private val logger = KotlinLogging.logger {}
 
+@Deprecated("Use MapFileReader().read() instead")
 fun readMapFile(path: Path): Map {
 	FileChannel.open(path, READ).use {
 		val buffer = it.map(READ_ONLY, 0, it.size()).order(LITTLE_ENDIAN)

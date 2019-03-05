@@ -3,10 +3,10 @@ package com.jhuangyc.cgmap.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.defaultLazy
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
-import com.jhuangyc.cgmap.io.readMapFile
+import com.jhuangyc.cgmap.io.MapFileReader
 import com.jhuangyc.cgmap.util.toHex
 import mu.KotlinLogging
 import java.nio.file.Path
@@ -16,23 +16,19 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 	private val logger = KotlinLogging.logger {}
 
 	private val mapFile: Path by argument(
+			name = "<map_file>",
 			help = "The Map file (.dat)")
-			.path()
+			.path(exists = true, folderOkay = false)
 
-	private val outputDir: Path by option(
-			help = "The directory where outputs are written to")
-			.path(exists = true, fileOkay = false)
-			.default(Paths.get(".", "out"))
-
-	private val paintMapToFile: Path? by option(
-			help = "If specified, paint the Map and output to this file")
-			.path(folderOkay = false)
+	private val paint: Boolean by option(
+			"-p",
+			help = "Paint the Graphic to screen or file")
+			.flag()
 
 	private val graphicInfoFile: Path by option(
 			help = "The GraphicInfo file (.bin)")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "GraphicInfo_66.bin"))
-
 
 	private val graphicFile: Path by option(
 			help = "The Graphic file (.bin)")
@@ -46,7 +42,7 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 
 
 	override fun run() {
-		val map = readMapFile(mapFile)
+		val map = MapFileReader(mapFile).read()
 
 		echo("File ${mapFile}:")
 		echo("  Magic = 0x${map.magic.toHex()}")
