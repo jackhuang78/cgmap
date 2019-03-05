@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level %d{HH:mm:ss.SSS} [%t] %C{1.} (%F:%L) - %msg%n}"/>
+            <BurstFilter level="DEBUG" rate="1" maxBurst="1"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root>
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>

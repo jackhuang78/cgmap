@@ -7,11 +7,12 @@ buildscript {
     }
 }
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.2.41"
+    id "org.jetbrains.kotlin.jvm" version "1.3.10"
 }
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'application'
 
 junitPlatform {
     filters {
@@ -27,28 +28,31 @@ repositories {
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
+    main.resources.srcDirs += 'src/main/resources'
     test.java.srcDirs += 'src/test/kotlin'
 }
 
 
+
 dependencies {
-    //def kotlinVersion = '1.1.4-2'
-    def kotlinVersion = '1.2.41'
-    def spekVersion = '1.1.3'
+    ext.kotlinVersion = '1.3.10'
+    ext.spekVersion = '1.1.3'
+    ext.log4jVersion = '2.8.1'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
+    compile "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
+    compile 'io.github.microutils:kotlin-logging:1.6.22'
     compile 'com.google.guava:guava:23.0'
-    compile 'com.github.ajalt:clikt:1.2.0'
+    compile 'com.github.ajalt:clikt:1.6.0'
 
+    testCompile 'com.google.truth:truth:0.34'
     testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
     testCompile "org.jetbrains.spek:spek-api:${spekVersion}"
     testRuntime "org.jetbrains.spek:spek-junit-platform-engine:${spekVersion}"
-    testCompile 'com.google.truth:truth:0.34'
 
-
-    compile 'io.github.microutils:kotlin-logging:1.5.4'
-    compile 'org.slf4j:slf4j-simple:1.7.5'
 
 }
 
@@ -63,10 +67,16 @@ compileTestKotlin {
     }
 }
 
-task runGraphicInfoFileViewer(type: JavaExec) {
-    main = 'com.jhuang78.cgmap.tool.GraphicInfoFileViewer'
-    classpath = sourceSets.main.runtimeClasspath
-}
+// Run with `gradle run`
+mainClassName = 'com.jhuangyc.cgmap.MainKt'
 
+// Run with `gradle jar`
+// And then `java -jar build/lib/cgmap.jar` to run Main.kt
+jar {
+    manifest { attributes 'Main-Class': "${mainClassName}" }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 
