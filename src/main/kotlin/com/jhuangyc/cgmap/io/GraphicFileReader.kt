@@ -76,21 +76,7 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 				data = buffer.slice().asReadOnlyBuffer())
 
 		try {
-			check(graphic.magic == GRAPHIC_ENTRY_MAGIC) {
-				"Expect magic to be ${GRAPHIC_ENTRY_MAGIC} (\"RD\"), but got ${graphic.magic}"
-			}
-			check(graphic.width > 0) {
-				"Expect width to be positive, but got ${graphic.width}"
-			};
-			check(graphic.height > 0) {
-				"Expect height to be positive, but got ${graphic.height}"
-			};
-			check(graphic.dataLength == GRAPHIC_ENTRY_HEADER_SIZE + graphic.data.capacity()) {
-				"Expect data length to be ${GRAPHIC_ENTRY_HEADER_SIZE}(header)"
-				+ " + ${graphic.data.capacity()}(data)"
-				+ " = ${GRAPHIC_ENTRY_HEADER_SIZE + graphic.data.capacity()}"
-				+ ", but got ${graphic.dataLength}."
-			}
+			graphic.validate()
 		} catch (e: IllegalStateException) {
 			logger.error(e) { "The read Graphic is probably corrupted." }
 		}
