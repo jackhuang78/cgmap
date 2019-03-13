@@ -12,28 +12,27 @@ import java.nio.channels.FileChannel.MapMode.READ_ONLY
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
-/**
- * Logger for this file.
- */
-private val logger = KotlinLogging.logger {}
-
-/**
- * Size of the header part of the entry (i.e. everything except the actual
- * data).
- */
-private const val GRAPHIC_ENTRY_HEADER_SIZE = 16
-
-/**
- * The magic value to mapMarker the beginning of each Graphic entry.
- * The value is "RD" in bytes.
- * Ints.fromBytes(0, 0, 'D'.toByte(), 'R'.toByte())
- */
-private const val GRAPHIC_ENTRY_MAGIC = 0x4452
 
 /**
  * A class to read Graphic from Graphic.bin file.
  */
 class GraphicFileReader(val path: Path) : AutoCloseable {
+	companion object {
+		/**
+		 * Size of the header part of the entry (i.e. everything except the actual
+		 * data).
+		 */
+		private val GRAPHIC_ENTRY_HEADER_SIZE = 16
+
+		/**
+		 * The magic value to mapMarker the beginning of each Graphic entry.
+		 * The value is "RD" in bytes.
+		 * Ints.fromBytes(0, 0, 'D'.toByte(), 'R'.toByte())
+		 */
+		private val GRAPHIC_ENTRY_MAGIC = 0x4452
+	}
+
+	private val logger = KotlinLogging.logger {}
 
 	private val fileChannel = FileChannel.open(path, StandardOpenOption.READ)
 
