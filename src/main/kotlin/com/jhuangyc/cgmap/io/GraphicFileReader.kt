@@ -30,6 +30,25 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 		 * Ints.fromBytes(0, 0, 'D'.toByte(), 'R'.toByte())
 		 */
 		private val GRAPHIC_ENTRY_MAGIC = 0x4452
+
+		/**
+		 * Validates that all values in this Graphic are valid.
+		 */
+		fun Graphic.validate() {
+			check(magic == GRAPHIC_ENTRY_MAGIC) {
+				"Expect magic to be ${GRAPHIC_ENTRY_MAGIC} (\"RD\"), but got ${magic}"
+			}
+			check(width > 0) { "Expect width to be positive, but got ${width}" };
+			check(height > 0) { "Expect height to be positive, but got ${height}" };
+			check(dataLength == GRAPHIC_ENTRY_HEADER_SIZE + data.capacity()) {
+				"Expect data length to be ${GRAPHIC_ENTRY_HEADER_SIZE}(header)"
+				+ " + ${data.capacity()}(data)"
+				+ " = ${GRAPHIC_ENTRY_HEADER_SIZE + data.capacity()},"
+				+ " but got ${dataLength}."
+			}
+
+			//TODO 7476, (?)
+		}
 	}
 
 	private val logger = KotlinLogging.logger {}
@@ -50,15 +69,30 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 		val graphic = Graphic(
 				magic = buffer.getShort().toUint(),
 				version = if (buffer.get().toUint() == 0) RAW else ENCODED,
-				unknown = buffer.get().toUint(), width = buffer.getInt(),
+				unknown = buffer.get().toUint(),
+				width = buffer.getInt(),
 				height = buffer.getInt(),
 				dataLength = buffer.getInt(), // Read the rest of hte buffer
 				data = buffer.slice().asReadOnlyBuffer())
 
 		try {
-			graphic.validate()
+			check(graphic.magic == GRAPHIC_ENTRY_MAGIC) {
+				"Expect magic to be ${GRAPHIC_ENTRY_MAGIC} (\"RD\"), but got ${graphic.magic}"
+			}
+			check(graphic.width > 0) {
+				"Expect width to be positive, but got ${graphic.width}"
+			};
+			check(graphic.height > 0) {
+				"Expect height to be positive, but got ${graphic.height}"
+			};
+			check(graphic.dataLength == GRAPHIC_ENTRY_HEADER_SIZE + graphic.data.capacity()) {
+				"Expect data length to be ${GRAPHIC_ENTRY_HEADER_SIZE}(header)"
+				+ " + ${graphic.data.capacity()}(data)"
+				+ " = ${GRAPHIC_ENTRY_HEADER_SIZE + graphic.data.capacity()}"
+				+ ", but got ${graphic.dataLength}."
+			}
 		} catch (e: IllegalStateException) {
-			logger.error(e, { "The read Graphic is probably corrupted" })
+			logger.error(e) { "The read Graphic is probably corrupted." }
 		}
 
 		return graphic
@@ -67,23 +101,6 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 	override fun close() {
 		fileChannel.close()
 	}
-}
-
-/**
- * Validates that all values in this Graphic are valid.
- */
-fun Graphic.validate(): Graphic {
-	check(magic == GRAPHIC_ENTRY_MAGIC, {
-		"Expect magic to be ${GRAPHIC_ENTRY_MAGIC} (\"RD\"), but got ${magic}"
-	})
-	check(width > 0, { "Expect width to be positive, but got ${width}" });
-	check(height > 0, { "Expect height to be positive, but got ${height}" });
-	check(dataLength == GRAPHIC_ENTRY_HEADER_SIZE + data.capacity(),
-			{ "Expect data length to be ${GRAPHIC_ENTRY_HEADER_SIZE}(header) + ${data.capacity()}(data) = ${GRAPHIC_ENTRY_HEADER_SIZE + data.capacity()}, but got ${dataLength}." })
-
-	//TODO 7476, (?)
-
-	return this
 }
 
 
