@@ -8,8 +8,6 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import java.io.IOException
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import java.nio.file.Paths
 import kotlin.test.assertFails
 
