@@ -1,7 +1,7 @@
 package com.jhuangyc.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
-import com.jhuangyc.cgmap.util.underResource
+import com.jhuangyc.cgmap.util.fromResources
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
@@ -15,7 +15,7 @@ class PaletFileReaderTest : Spek({
 
 		given("an valid palet file") {
 			val palet = readPaletFile(
-					Paths.get("palet", "palet_00.cgp").underResource())
+					Paths.get("palet", "palet_00.cgp").fromResources())
 
 			it("should read base colors") {
 				assertThat(palet.colors[0]).isEqualTo(Color(0x00, 0x00, 0x00))

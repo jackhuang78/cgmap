@@ -2,7 +2,7 @@ package com.jhuangyc.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
 import com.jhuangyc.cgmap.entity.GraphicInfo
-import com.jhuangyc.cgmap.util.underResource
+import com.jhuangyc.cgmap.util.fromResources
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
@@ -17,7 +17,7 @@ class GraphicInfoFileReaderTest : Spek({
 	describe("GraphicInfoFileReader()") {
 		given("a valid input file") {
 			val reader = GraphicInfoFileReader(
-					Paths.get("GraphicInfo_66_small.bin").underResource())
+					Paths.get("GraphicInfo_66_small.bin").fromResources())
 
 			it("should know number of entries") {
 				assertThat(reader.numberOfEntries).isEqualTo(2)
@@ -66,7 +66,7 @@ class GraphicInfoFileReaderTest : Spek({
 		}
 
 		given("a directory as input file") {
-			val reader = GraphicInfoFileReader(Paths.get(".").underResource())
+			val reader = GraphicInfoFileReader(Paths.get(".").fromResources())
 
 			it("should fail to read an entry") {
 				assertFailsWith<IOException> {
@@ -77,7 +77,7 @@ class GraphicInfoFileReaderTest : Spek({
 
 		given("an invalid input file") {
 			val reader = GraphicInfoFileReader(
-					Paths.get("random.bin").underResource())
+					Paths.get("random.bin").fromResources())
 
 			it("should fail to read an valid entry") {
 				assertFailsWith<IllegalStateException> {

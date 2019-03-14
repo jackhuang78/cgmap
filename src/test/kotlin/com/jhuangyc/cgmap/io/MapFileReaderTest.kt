@@ -1,7 +1,7 @@
 package com.jhuangyc.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
-import com.jhuangyc.cgmap.util.underResource
+import com.jhuangyc.cgmap.util.fromResources
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
@@ -12,7 +12,7 @@ class MapFileReaderTest : Spek({
 
 	describe("readMapFile()") {
 		given("an valid file") {
-			val map = readMapFile(Paths.get("map", "0", "100.dat").underResource())
+			val map = readMapFile(Paths.get("map", "0", "100.dat").fromResources())
 			it("should read header correctly") {
 				assertThat(map.eastLength).isEqualTo(0x0348)
 				assertThat(map.southLength).isEqualTo(0x0262)

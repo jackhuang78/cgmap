@@ -7,6 +7,6 @@ import java.nio.file.Paths
 /**
  * Get the path under resource.
  */
-fun Path.underResource() = Paths.get(
+fun Path.fromResources() = Paths.get(
 		Resources.getResource(this.toString()).path)
 
