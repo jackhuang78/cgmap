@@ -33,7 +33,7 @@
 //    }
 //    imagePanel.preferredSize = Dimension(640, 480)
 //
-//    val graphicSelectSpinner = JSpinner(SpinnerNumberModel(0, 0, infoFileReader.size - 1, 1))
+//    val graphicSelectSpinner = JSpinner(SpinnerNumberModel(0, 0, infoFileReader.numEntries - 1, 1))
 //    graphicSelectSpinner.addChangeListener {
 //        info = infoFileReader.read((it.source as JSpinner).value as Int)
 //        data = dataFileReader.read(info.address, info.dataLength)

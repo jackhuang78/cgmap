@@ -74,7 +74,7 @@
 //        val (tileNo, x, y) = itor.next()
 //        println("${tileNo}, ${x}, ${y}")
 //        val ground = view.tiles[tileNo].ground
-//        if (ground.mapNo !in setOf(0, 999, 100)) {
+//        if (ground.graphicId !in setOf(0, 999, 100)) {
 //            val data = dataFileReader.read(ground.address, ground.dataLength)
 //            paintGraphic(g, ground, data, palet,
 //                    origin = Point(
@@ -110,7 +110,7 @@
 ////        dx -= 32
 ////        dy -= 23
 ////
-////        if (ground.mapNo !in setOf(0, 999, 100)) {
+////        if (ground.graphicId !in setOf(0, 999, 100)) {
 ////            val data = dataFileReader.read(ground.address, ground.dataLength)
 ////            paintGraphic(g, ground, data, palet,
 ////                    origin = Point(
@@ -153,7 +153,7 @@
 //        dx -= 32
 //        dy -= 23
 //
-//        if (item.mapNo !in setOf(0, 999, 100)) {
+//        if (item.graphicId !in setOf(0, 999, 100)) {
 //            val data = dataFileReader.read(item.address, item.dataLength)
 //            paintGraphic(g, item, data, palet,
 //                    origin = Point(

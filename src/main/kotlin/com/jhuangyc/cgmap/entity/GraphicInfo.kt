@@ -67,9 +67,9 @@ data class GraphicInfo(
 		val unknown: Long = 0L,
 
 		/**
-		 * The map this Graphic belongs to.
+		 * The ID of this graphic
 		 */
-		val mapNo: Int = 0
+		val graphicId: Int = 0
 ) {
 
 	/**

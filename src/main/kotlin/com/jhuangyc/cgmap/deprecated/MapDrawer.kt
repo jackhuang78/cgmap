@@ -7,12 +7,12 @@
 //import javax.imageio.ImageIO
 //
 //fun main(args: Array<String>) {
-//    val mapNo = "30011"
+//    val graphicId = "30011"
 //
 //    val infoFileReader = InfoFileReader(Paths.get("data/GraphicInfo_66.bin"))
 //    val dataFileReader = DataFileReader(Paths.get("data/Graphic_66.bin"))
 //    val paletFileReader = PaletFileReader(Paths.get("data/pal"))
-//    val mapFileReader = MapFileReader(Paths.get("data/map/0/${mapNo}.dat"))
+//    val mapFileReader = MapFileReader(Paths.get("data/map/0/${graphicId}.dat"))
 //
 //    val width = mapFileReader.width
 //    val height = mapFileReader.height
@@ -22,7 +22,7 @@
 //    val mapView = mapFileReader.readView(0, 0, width, height, infoFileReader)
 //    var palet = paletFileReader.read(Paths.get("palet_00.cgp"))
 //    paintMap(image.createGraphics(), mapView, dataFileReader, palet, zoom = 1.0)
-//    ImageIO.write(image, "png", Paths.get("${mapNo}.png").toFile())
+//    ImageIO.write(image, "png", Paths.get("${graphicId}.png").toFile())
 //
 //
 //}

@@ -22,26 +22,26 @@
 //val INFO_ENTRY_SIZE = 40L
 //class InfoFileReader(val path: Path): AutoCloseable {
 //    private val fc = FileChannel.open(path, StandardOpenOption.READ);
-//    val size = (fc.size() / INFO_ENTRY_SIZE).toInt()
+//    val numEntries = (fc.numEntries() / INFO_ENTRY_SIZE).toInt()
 //    private val mapNoToEntryNo = {
 //        val map = mutableMapOf<Int, Int>()
-//        for(i in 0..size-1) {
+//        for(i in 0..numEntries-1) {
 //            val info = read(i)
 //            // TODO: there shouldn't be any duplicated
-//            if(info.mapNo !in map) {
-//                map.put(info.mapNo, i)
+//            if(info.graphicId !in map) {
+//                map.put(info.graphicId, i)
 //            }
 //        }
 //        map.toMap()
 //    }()
 //
-//    fun readMapEntry(mapNo: Int): GraphicInfo {
-//        val entryNo = mapNoToEntryNo[mapNo] ?: 0
+//    fun readMapEntry(graphicId: Int): GraphicInfo {
+//        val entryNo = mapNoToEntryNo[graphicId] ?: 0
 //        return read(checkNotNull(entryNo))
 //    }
 //
 //    fun read(entryNo: Int): GraphicInfo {
-//        checkElementIndex(entryNo, size)
+//        checkElementIndex(entryNo, numEntries)
 //        val buffer = fc
 //                .map(FileChannel.MapMode.READ_ONLY, entryNo * INFO_ENTRY_SIZE, INFO_ENTRY_SIZE)
 //                .order(ByteOrder.LITTLE_ENDIAN)
@@ -65,7 +65,7 @@
 //                    val b5 = buffer.get()
 //                    Longs.fromBytes(0, 0, 0, b5, b4, b3, b2, b1)
 //                }(),
-//                mapNo = buffer.getInt()
+//                graphicId = buffer.getInt()
 //            )//.validate()
 //
 //    }
@@ -80,15 +80,15 @@
 //    private var prevPos = -1
 //    private var prevData = GraphicData()
 //
-//    fun read(position: Int, size: Int): GraphicData {
-//        checkElementIndex(position, fc.size().toInt())
+//    fun read(position: Int, numEntries: Int): GraphicData {
+//        checkElementIndex(position, fc.numEntries().toInt())
 //
 //        if(position == prevPos) {
 //            return prevData
 //        }
 //
 //        val buffer = fc
-//                .map(FileChannel.MapMode.READ_ONLY, position.toLong(), size.toLong())
+//                .map(FileChannel.MapMode.READ_ONLY, position.toLong(), numEntries.toLong())
 //                .order(ByteOrder.LITTLE_ENDIAN);
 //        val data = GraphicData(
 //                magic = buffer.getShort().toUint(),
@@ -153,8 +153,8 @@
 //class PaletFileReader(val dir: Path) {
 //    fun read(file: Path): GraphicPalet {
 //        FileChannel.open(dir.resolve(file), StandardOpenOption.READ).use {
-//            checkArgument(it.size() == PALET_FILE_SIZE,
-//                    "Expect palet file to have numberOfEntries ${PALET_FILE_SIZE}, but got ${it.size()}")
+//            checkArgument(it.numEntries() == PALET_FILE_SIZE,
+//                    "Expect palet file to have numEntries ${PALET_FILE_SIZE}, but got ${it.numEntries()}")
 //
 //            val buffer = it.map(MapMode.READ_ONLY, 0, PALET_FILE_SIZE)
 //            return GraphicPalet(colors = Array(PALET_NUM_COLORS) {
@@ -184,7 +184,7 @@
 //val MAP_VALID_MAGIC = Ints.fromBytes(0, 'P'.toByte(), 'A'.toByte(), 'M'.toByte())
 //class MapFileReader(val path: Path): AutoCloseable {
 //    private val fc = FileChannel.open(path, StandardOpenOption.READ)
-//    private val buf = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size())
+//    private val buf = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.numEntries())
 //            .order(ByteOrder.LITTLE_ENDIAN);
 //    val magic = {
 //        val magic = Ints.fromBytes(0, buf.get(2), buf.get(1), buf.get(0))
@@ -193,12 +193,12 @@
 //    }
 //    val width = buf.getInt(12)
 //    val height = buf.getInt(16)
-//    val size = width * height
+//    val numEntries = width * height
 //
 //    fun read(east: Int, south: Int): MapTile {
 //        val groundIdx = MAP_FILE_HEADER + (south * width + east) * 2
-//        val itemIdx = groundIdx + size*2
-//        val markIdx = itemIdx + size*2
+//        val itemIdx = groundIdx + numEntries*2
+//        val markIdx = itemIdx + numEntries*2
 //        return MapTile(
 //                ground = buf.getShort(groundIdx).toUint(),
 //                item = buf.getShort(itemIdx).toUint(),

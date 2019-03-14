@@ -48,16 +48,15 @@ class MapViewPainter(
 		if (tileNumber != null) {
 			val graphicMapNumber = if (drawFloor)
 				map.floors[tileNumber] else map.entities[tileNumber]
-			val graphicNumber = graphicInfoFileReader.mapNoIndex[graphicMapNumber]
 
 			if (graphicMapNumber !in setOf(0, 2, 999, 100) ) {
-				val graphicInfo = graphicInfoFileReader.read(graphicNumber!!)
+				val graphicInfo = graphicInfoFileReader.readByGraphicId(graphicMapNumber)
 				val graphic = graphicFileReader.read(graphicInfo.address,
 						graphicInfo.dataLength)
 
 				paintGraphic(g, graphicInfo, graphic, palet, tileOrigin)
 			} else {
-				println("$tileNumber, $graphicMapNumber, $graphicNumber")
+				println("$tileNumber, $graphicMapNumber")
 			}
 
 

@@ -20,7 +20,7 @@ class GraphicInfoFileReaderTest : Spek({
 					Paths.get("GraphicInfo_66_small.bin").fromResources())
 
 			it("should know number of entries") {
-				assertThat(reader.numberOfEntries).isEqualTo(2)
+				assertThat(reader.numEntries).isEqualTo(2)
 			}
 
 			it("should read valid entries") {
@@ -41,7 +41,7 @@ class GraphicInfoFileReaderTest : Spek({
 				assertThat(info0.occupySouth).isEqualTo(1);
 				assertThat(info0.mapMarker).isEqualTo(
 						GraphicInfo.MapMarker.FLOOR);
-				assertThat(info0.mapNo).isEqualTo(0x03e7);
+				assertThat(info0.graphicId).isEqualTo(0x03e7);
 
 				val info1 = reader.read(1);
 				assertThat(info1.graphicNo).isEqualTo(1);
@@ -55,7 +55,7 @@ class GraphicInfoFileReaderTest : Spek({
 				assertThat(info1.occupySouth).isEqualTo(1);
 				assertThat(info1.mapMarker).isEqualTo(
 						GraphicInfo.MapMarker.OBSTACLE);
-				assertThat(info1.mapNo).isEqualTo(0x0012);
+				assertThat(info1.graphicId).isEqualTo(0x0012);
 			}
 
 			it("should fail to read non-existing entry") {

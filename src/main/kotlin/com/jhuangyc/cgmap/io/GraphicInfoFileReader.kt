@@ -1,6 +1,5 @@
 package com.jhuangyc.cgmap.io
 
-import com.google.common.base.Preconditions.checkElementIndex
 import com.google.common.primitives.Longs
 import com.jhuangyc.cgmap.entity.GraphicInfo
 import com.jhuangyc.cgmap.entity.GraphicInfo.MapMarker.FLOOR
@@ -11,47 +10,46 @@ import java.nio.channels.FileChannel.MapMode.READ_ONLY
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
-/**
- * Size of a GraphicInfo entry in GraphicInfo.bin file.
- */
-const val GRAPHIC_INFO_ENTRY_SIZE = 40L
 
 /**
  * A class to read GraphicInfo from a GraphicInfo.bin file.
  */
 class GraphicInfoFileReader(path: Path) : AutoCloseable {
+	companion object {
+		private val ENTRY_SIZE = 40
+	}
 
-	/**
-	 * An open channel to the GraphicInfo.bin file. This is keep open until
-	 * {@link #close} is invoked.
-	 */
 	private val fileChannel = FileChannel.open(path, StandardOpenOption.READ)
 
+	val numEntries = (fileChannel.size() / ENTRY_SIZE).toInt()
 
-	/**
-	 * The number of GraphicInfo in this file.
-	 */
-	val numberOfEntries = (fileChannel.size() / GRAPHIC_INFO_ENTRY_SIZE).toInt()
+	private val graphicIdToFileIdxMap = (0 until numEntries)
+			.map { read(it).graphicId to it }
+			.toMap()
 
-	val mapNoIndex = (0 until numberOfEntries).map {
-			Pair(read(it).mapNo, it)
-	}.toMap()
+	fun readByGraphicId(graphicId: Int): GraphicInfo {
+		val fileIdx = graphicIdToFileIdxMap[graphicId]
+				?: throw IllegalArgumentException("Unknown graphic ID: ${graphicId}")
 
-	/**
-	 * Reads a specific GraphicInfo from the file.
-	 */
-	fun read(entryNo: Int): GraphicInfo {
-		checkElementIndex(entryNo, numberOfEntries)
+		return read(fileIdx)
+	}
 
-		val buffer = fileChannel.map(READ_ONLY, entryNo * GRAPHIC_INFO_ENTRY_SIZE,
-				GRAPHIC_INFO_ENTRY_SIZE).order(LITTLE_ENDIAN)
+	fun read(fileIdx: Int): GraphicInfo {
+		val buffer = fileChannel
+				.map(READ_ONLY, (fileIdx * ENTRY_SIZE).toLong(), ENTRY_SIZE.toLong())
+				.order(LITTLE_ENDIAN)
 
-		return GraphicInfo(graphicNo = buffer.getInt(),
+		val graphicInfo = GraphicInfo(
+				graphicNo = buffer.getInt(),
 				address = buffer.getInt(),
-				dataLength = buffer.getInt(), offsetX = buffer.getInt(),
-				offsetY = buffer.getInt(), imageWidth = buffer.getInt(),
-				imageHeight = buffer.getInt(), occupyEast = buffer.get().toInt(),
-				occupySouth = buffer.get().toInt(), // TODO: for 7480 to 7498, mapMarker is 45 for unknown reason
+				dataLength = buffer.getInt(),
+				offsetX = buffer.getInt(),
+				offsetY = buffer.getInt(),
+				imageWidth = buffer.getInt(),
+				imageHeight = buffer.getInt(),
+				occupyEast = buffer.get().toInt(),
+				// TODO: for 7480 to 7498, mapMarker is 45 for unknown reason
+				occupySouth = buffer.get().toInt(),
 				mapMarker = if (buffer.get().toInt() == 0) OBSTACLE else FLOOR,
 				unknown = {
 					val b1 = buffer.get()
@@ -60,27 +58,29 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 					val b4 = buffer.get()
 					val b5 = buffer.get()
 					Longs.fromBytes(0, 0, 0, b5, b4, b3, b2, b1)
-				}(), mapNo = buffer.getInt())
+				}(),
+				graphicId = buffer.getInt())
+
+		listOf(
+				graphicInfo.graphicNo to "GraphicNo",
+				graphicInfo.address to "Address",
+				graphicInfo.dataLength to "DataLength",
+				graphicInfo.imageWidth to "ImageWidth",
+				graphicInfo.imageHeight to "ImageHeight",
+				graphicInfo.occupyEast to "OccupyEast",
+				graphicInfo.occupySouth to "OccupySouth",
+				graphicInfo.graphicId to "MapNo"
+		).forEach {
+			check(it.first >= 0) {
+				"Expect non-negative value for ${it.second}, but got ${it.first}"
+			}
+		}
+
+		return graphicInfo
 	}
 
 	override fun close() {
 		fileChannel.close()
 	}
-}
-
-/**
- * Validates a GraphicInfo.
- */
-fun GraphicInfo.validate(): GraphicInfo {
-	listOf(Pair(graphicNo, "GraphicNo"), Pair(address, "Address"),
-			Pair(dataLength, "DataLength"), Pair(imageWidth, "ImageWidth"),
-			Pair(imageHeight, "ImageHeight"), Pair(occupyEast, "OccupyEast"),
-			Pair(occupySouth, "OccupySouth"), Pair(mapNo, "MapNo")).forEach {
-		check(it.first >= 0, {
-			"Expect non-negative value for ${it.second}, but got ${it.first}"
-		})
-	}
-
-	return this
 }
 

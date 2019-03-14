@@ -20,7 +20,7 @@
 //            val path = getResource("GraphicInfo_66_small.bin")
 //            val reader = InfoFileReader(path)
 //            it("should know number of entries") {
-//                assertThat(reader.size).isEqualTo(2)
+//                assertThat(reader.numEntries).isEqualTo(2)
 //            }
 //            it("should read valid entries") {
 //                reader.read(0).validate()
@@ -38,7 +38,7 @@
 //                assertThat(info0.occupyEast).isEqualTo(1);
 //                assertThat(info0.occupySouth).isEqualTo(1);
 //                assertThat(info0.mark).isEqualTo(1);
-//                assertThat(info0.mapNo).isEqualTo(0x03e7);
+//                assertThat(info0.graphicId).isEqualTo(0x03e7);
 //
 //                val info1 = reader.read(1);
 //                assertThat(info1.graphicNo).isEqualTo(1);
@@ -51,7 +51,7 @@
 //                assertThat(info1.occupyEast).isEqualTo(1);
 //                assertThat(info1.occupySouth).isEqualTo(1);
 //                assertThat(info1.mark).isEqualTo(0);
-//                assertThat(info1.mapNo).isEqualTo(0x0012);
+//                assertThat(info1.graphicId).isEqualTo(0x0012);
 //            }
 //            it("should fail to read non-existing entry") {
 //                assertFailsWith<IndexOutOfBoundsException> {
