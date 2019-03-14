@@ -1,8 +1,8 @@
 package com.jhuangyc.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
-import com.jhuang78.cgmap.util.underResource
-import com.jhuang78.cgmap.entity.GraphicInfo
+import com.jhuangyc.cgmap.entity.GraphicInfo
+import com.jhuangyc.cgmap.util.underResource
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
