@@ -9,7 +9,7 @@ import java.nio.ByteOrder.LITTLE_ENDIAN
 import java.nio.channels.FileChannel
 import java.nio.channels.FileChannel.MapMode.READ_ONLY
 import java.nio.file.Path
-import java.nio.file.StandardOpenOption.READ
+import java.nio.file.StandardOpenOption
 
 
 /**
@@ -28,7 +28,7 @@ class GraphicFileReader(val path: Path) : AutoCloseable {
 	private val logger = KotlinLogging.logger {}
 
 	private val fileChannel by lazy {
-		FileChannel.open(path, READ)
+		FileChannel.open(path, StandardOpenOption.READ)
 	}
 
 	fun read(position: Int, size: Int): Graphic {
