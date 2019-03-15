@@ -19,13 +19,19 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 		private val ENTRY_SIZE = 40
 	}
 
-	private val fileChannel = FileChannel.open(path, StandardOpenOption.READ)
+	private val fileChannel by lazy {
+		FileChannel.open(path, StandardOpenOption.READ)
+	}
 
-	val numEntries = (fileChannel.size() / ENTRY_SIZE).toInt()
+	val numEntries by lazy {
+		(fileChannel.size() / ENTRY_SIZE).toInt()
+	}
 
-	private val graphicIdToFileIdxMap = (0 until numEntries)
-			.map { read(it).graphicId to it }
-			.toMap()
+	private val graphicIdToFileIdxMap by lazy {
+		(0 until numEntries)
+				.map { read(it).graphicId to it }
+				.toMap()
+	}
 
 	fun readByGraphicId(graphicId: Int): GraphicInfo {
 		val fileIdx = graphicIdToFileIdxMap[graphicId]
