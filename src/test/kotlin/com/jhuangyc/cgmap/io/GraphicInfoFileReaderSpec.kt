@@ -71,25 +71,24 @@ object GraphicInfoFileReaderSpec : Spek({
 				assertThat(thrown).isInstanceOf(IOException::class.java)
 			}
 		}
+	}
 
-		given("a reader with invalid input file") {
-			val invalidFile = Paths.get("random.bin").fromResources()
-			val thrown = assertFails { GraphicInfoFileReader(invalidFile) }
+	listOf(
+			arrayOf("invalid file", "random.bin", IllegalStateException::class.java),
+			arrayOf("directory", ".", IOException::class.java)
+	).forEach { (case, inputFile, expectedError) ->
 
-			it("should fail") {
-				assertThat(thrown).isInstanceOf(IllegalStateException::class.java)
+		given("a reader with ${case} as input file") {
+			val invalidFile = Paths.get(inputFile as String).fromResources()
+			val reader = GraphicInfoFileReader(invalidFile)
+
+			on("read()") {
+				val thrown = assertFails { reader.read(0) }
+
+				it("should fail") {
+					assertThat(thrown).isInstanceOf(expectedError as Class<*>)
+				}
 			}
 		}
-
-		given("a reader with directory as input file") {
-			val directory = Paths.get(".").fromResources()
-			val thrown = assertFails { GraphicInfoFileReader(directory) }
-
-			it("should fail") {
-				assertThat(thrown).isInstanceOf(IOException::class.java)
-			}
-		}
-
-
 	}
 })
