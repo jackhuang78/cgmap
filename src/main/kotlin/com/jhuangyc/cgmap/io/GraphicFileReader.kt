@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption
 /**
  * A class to read Graphic from Graphic.bin file.
  */
-class GraphicFileReader(val path: Path) : AutoCloseable {
+class GraphicFileReader(private val path: Path) : AutoCloseable {
 	companion object {
 		private val HEADER_SIZE = 16
 
