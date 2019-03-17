@@ -17,7 +17,7 @@ import java.nio.file.StandardOpenOption
  */
 class GraphicInfoFileReader(private val path: Path) : AutoCloseable {
 	companion object {
-		private val ENTRY_SIZE_B = 40
+		private val ENTRY_SIZE_BYTE = 40
 	}
 
 	private val logger = KotlinLogging.logger {}
@@ -27,7 +27,7 @@ class GraphicInfoFileReader(private val path: Path) : AutoCloseable {
 	}
 
 	val numEntries by lazy {
-		(fileChannel.size() / ENTRY_SIZE_B).toInt()
+		(fileChannel.size() / ENTRY_SIZE_BYTE).toInt()
 	}
 
 	private val graphicIdToFileIdxMap by lazy {
@@ -51,8 +51,8 @@ class GraphicInfoFileReader(private val path: Path) : AutoCloseable {
 
 		val buffer = fileChannel
 				.map(READ_ONLY,
-						(fileIdx * ENTRY_SIZE_B).toLong(),
-						ENTRY_SIZE_B.toLong())
+						(fileIdx * ENTRY_SIZE_BYTE).toLong(),
+						ENTRY_SIZE_BYTE.toLong())
 				.order(LITTLE_ENDIAN)
 
 		val graphicInfo = GraphicInfo(

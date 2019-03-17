@@ -17,7 +17,7 @@ import java.nio.file.StandardOpenOption
  */
 class GraphicFileReader(private val path: Path) : AutoCloseable {
 	companion object {
-		private val HEADER_SIZE = 16
+		private val HEADER_SIZE_B = 16
 
 		// Each entry begins with this two-byte magic value: 'RD'
 		private val MAGIC = 0x4452
@@ -56,12 +56,12 @@ class GraphicFileReader(private val path: Path) : AutoCloseable {
 		check(graphic.height > 0) {
 			"Expect height to be positive, but got ${graphic.height}"
 		}
-		check(graphic.dataLength == (HEADER_SIZE + graphic.data.capacity())) {
+		check(graphic.dataLength == (HEADER_SIZE_B + graphic.data.capacity())) {
 			"""
 				Expect data length to be
-				${HEADER_SIZE}(header)
+				${HEADER_SIZE_B}(header)
 				+ ${graphic.data.capacity()}(data)
-				= ${HEADER_SIZE + graphic.data.capacity()},
+				= ${HEADER_SIZE_B + graphic.data.capacity()},
 				but got $graphic.{dataLength}.
 			""".trimIndent()
 		}
