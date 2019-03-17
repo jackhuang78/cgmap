@@ -4,6 +4,7 @@ import com.google.common.primitives.Longs
 import com.jhuangyc.cgmap.entity.GraphicInfo
 import com.jhuangyc.cgmap.entity.GraphicInfo.MapMarker.FLOOR
 import com.jhuangyc.cgmap.entity.GraphicInfo.MapMarker.OBSTACLE
+import mu.KotlinLogging
 import java.nio.ByteOrder.LITTLE_ENDIAN
 import java.nio.channels.FileChannel
 import java.nio.channels.FileChannel.MapMode.READ_ONLY
@@ -14,26 +15,31 @@ import java.nio.file.StandardOpenOption
 /**
  * A class to read GraphicInfo from a GraphicInfo.bin file.
  */
-class GraphicInfoFileReader(path: Path) : AutoCloseable {
+class GraphicInfoFileReader(private val path: Path) : AutoCloseable {
 	companion object {
-		private val ENTRY_SIZE = 40
+		private val ENTRY_SIZE_B = 40
 	}
+
+	private val logger = KotlinLogging.logger {}
 
 	private val fileChannel by lazy {
 		FileChannel.open(path, StandardOpenOption.READ)
 	}
 
 	val numEntries by lazy {
-		(fileChannel.size() / ENTRY_SIZE).toInt()
+		(fileChannel.size() / ENTRY_SIZE_B).toInt()
 	}
 
 	private val graphicIdToFileIdxMap by lazy {
+		logger.debug("Building GraphicId to FileIdx mapping")
 		(0 until numEntries)
 				.map { read(it).graphicId to it }
 				.toMap()
 	}
 
 	fun readByGraphicId(graphicId: Int): GraphicInfo {
+		logger.debug("Read graphicInfo by GraphicId ${graphicId}")
+
 		val fileIdx = graphicIdToFileIdxMap[graphicId]
 				?: throw IllegalArgumentException("Unknown graphic ID: ${graphicId}")
 
@@ -41,8 +47,12 @@ class GraphicInfoFileReader(path: Path) : AutoCloseable {
 	}
 
 	fun read(fileIdx: Int): GraphicInfo {
+		logger.debug("Read GraphicInfo from ${path} at index ${fileIdx}")
+
 		val buffer = fileChannel
-				.map(READ_ONLY, (fileIdx * ENTRY_SIZE).toLong(), ENTRY_SIZE.toLong())
+				.map(READ_ONLY,
+						(fileIdx * ENTRY_SIZE_B).toLong(),
+						ENTRY_SIZE_B.toLong())
 				.order(LITTLE_ENDIAN)
 
 		val graphicInfo = GraphicInfo(
