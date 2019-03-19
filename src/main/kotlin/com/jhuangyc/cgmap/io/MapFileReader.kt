@@ -54,7 +54,7 @@ class MapFileReader(private val path: Path) {
 
 			val map = Map(
 					magic = magic,
-					dimension = Map.Size(eastLength, southLength),
+					dimension = Map.Point(eastLength, southLength),
 					floors = floors,
 					entities = entities,
 					attributes = attributes)

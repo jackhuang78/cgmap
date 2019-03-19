@@ -6,8 +6,11 @@ data class Map(
 		 */
 		val magic: Int,
 
-		/** Dimension of the map. */
-		val dimension: Size,
+		/**
+		 *  Dimension of the map.
+		 *  NOTE: this point is not on the map.
+		 */
+		val dimension: Point,
 
 		/**
 		 * The graphic numbers of tiles on this map
@@ -28,11 +31,11 @@ data class Map(
 		UNKNOWN, VOID, FLOOR, WRAP, SOLID,
 	}
 
-	/** Represents the size of a rectangular region on a [Map]. */
-	data class Size(
-			/** Length along lower left */
+	/** Represents a location on a [Map]. */
+	data class Point(
+			/** The nth tile in the lower left direction. */
 			val east: Int,
-			/** Length along lower right */
+			/** The nth tile in the lower right direction. */
 			val south: Int
 	)
 }
