@@ -7,8 +7,8 @@ import com.jhuangyc.cgmap.entity.MapLocation
 import com.jhuangyc.cgmap.entity.MapView
 import com.jhuangyc.cgmap.io.GraphicFileReader
 import com.jhuangyc.cgmap.io.GraphicInfoFileReader
+import com.jhuangyc.cgmap.io.PaletFileReader
 import com.jhuangyc.cgmap.io.readMapFile
-import com.jhuangyc.cgmap.io.readPaletFile
 import com.jhuangyc.cgmap.painter.MapViewPainter
 import com.jhuangyc.cgmap.painter.TILE_DIMENSION
 import mu.KotlinLogging
@@ -34,11 +34,12 @@ fun main(args: Array<String>) = object : CliktCommand() {
 		println("========= MapViewer ==========")
 
 		val mapView = MapView(9, 9)
-		val mapViewCenter = MapLocation(50,50)
+		val mapViewCenter = MapLocation(50, 50)
 		val mapViewPainter = MapViewPainter(
 				mapView = mapView,
 				map = readMapFile(Paths.get("data", "map", "0", "1000.dat")),
-				palet = readPaletFile(Paths.get("data", "palet", "palet_00.cgp")),
+				palet = PaletFileReader(
+						Paths.get("data", "palet", "palet_00.cgp")).read(),
 				graphicFileReader = GraphicFileReader(
 						Paths.get("data", "Graphic_66.bin")),
 				graphicInfoFileReader = GraphicInfoFileReader(
@@ -63,7 +64,7 @@ fun main(args: Array<String>) = object : CliktCommand() {
 
 				override fun keyPressed(e: KeyEvent?) {
 					if (e!!.keyChar !in setOf('q', 'w', 'e', 'd', 'c', 'x', 'z', 'a', '1',
-							'2')) {
+									'2')) {
 						return
 					}
 
