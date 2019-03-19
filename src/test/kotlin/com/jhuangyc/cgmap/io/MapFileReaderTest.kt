@@ -12,7 +12,8 @@ class MapFileReaderTest : Spek({
 
 	describe("readMapFile()") {
 		given("an valid file") {
-			val map = readMapFile(Paths.get("map", "0", "100.dat").fromResources())
+			val map = MapFileReader(
+					Paths.get("map", "0", "100.dat").fromResources()).read()
 			it("should read header correctly") {
 				assertThat(map.eastLength).isEqualTo(0x0348)
 				assertThat(map.southLength).isEqualTo(0x0262)

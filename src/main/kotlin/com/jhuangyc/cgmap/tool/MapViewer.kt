@@ -7,8 +7,8 @@ import com.jhuangyc.cgmap.entity.MapLocation
 import com.jhuangyc.cgmap.entity.MapView
 import com.jhuangyc.cgmap.io.GraphicFileReader
 import com.jhuangyc.cgmap.io.GraphicInfoFileReader
+import com.jhuangyc.cgmap.io.MapFileReader
 import com.jhuangyc.cgmap.io.PaletFileReader
-import com.jhuangyc.cgmap.io.readMapFile
 import com.jhuangyc.cgmap.painter.MapViewPainter
 import com.jhuangyc.cgmap.painter.TILE_DIMENSION
 import mu.KotlinLogging
@@ -37,7 +37,7 @@ fun main(args: Array<String>) = object : CliktCommand() {
 		val mapViewCenter = MapLocation(50, 50)
 		val mapViewPainter = MapViewPainter(
 				mapView = mapView,
-				map = readMapFile(Paths.get("data", "map", "0", "1000.dat")),
+				map = MapFileReader(Paths.get("data", "map", "0", "1000.dat")).read(),
 				palet = PaletFileReader(
 						Paths.get("data", "palet", "palet_00.cgp")).read(),
 				graphicFileReader = GraphicFileReader(
