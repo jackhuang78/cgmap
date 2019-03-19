@@ -12,11 +12,12 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption.READ
 
 class MapFileReader(private val path: Path) {
-	private val logger = KotlinLogging.logger {}
-
 	companion object {
-		private val VALID_MAP_MAGIC = 0x004D4150  // 'M', 'A', 'P'
+		// 'M', 'A', 'P'
+		private val MAGIC = 0x004D4150
 	}
+
+	private val logger = KotlinLogging.logger {}
 
 	fun read(): Map {
 		FileChannel.open(path, READ).use { file ->
@@ -25,7 +26,7 @@ class MapFileReader(private val path: Path) {
 					.order(LITTLE_ENDIAN)
 
 			val magic = Ints.fromBytes(0, buffer.get(), buffer.get(), buffer.get())
-			if (magic != VALID_MAP_MAGIC) {
+			if (magic != MAGIC) {
 				logger.warn { "Got unexpected magic ${magic}. Data is likely corrupted." }
 			}
 
@@ -51,13 +52,20 @@ class MapFileReader(private val path: Path) {
 				}
 			}
 
-			return Map(
+			val map = Map(
 					magic = magic,
 					eastLength = eastLength,
 					southLength = southLength,
 					floors = floors,
 					entities = entities,
 					attributes = attributes)
+
+			check(map.magic == MAGIC)
+			check(map.eastLength > 0)
+			check(map.southLength > 0)
+			check(map.size > 0)
+
+			return map
 		}
 	}
 }
