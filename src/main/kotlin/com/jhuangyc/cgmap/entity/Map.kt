@@ -6,20 +6,8 @@ data class Map(
 		 */
 		val magic: Int,
 
-		/**
-		 * Number of tiles in the east direction (lower left)
-		 */
-		val eastLength: Int,
-
-		/**
-		 * Number of tiles in the south direction (lower right)
-		 */
-		val southLength: Int,
-
-		/**
-		 * The number of tiles in this map.
-		 */
-		val size: Int = eastLength * southLength,
+		/** Dimension of the map. */
+		val dimension: Size,
 
 		/**
 		 * The graphic numbers of tiles on this map
@@ -39,4 +27,12 @@ data class Map(
 	enum class Attribute {
 		UNKNOWN, VOID, FLOOR, WRAP, SOLID,
 	}
+
+	/** Represents the size of a rectangular region on a [Map]. */
+	data class Size(
+			/** Length along lower left */
+			val east: Int,
+			/** Length along lower right */
+			val south: Int
+	)
 }

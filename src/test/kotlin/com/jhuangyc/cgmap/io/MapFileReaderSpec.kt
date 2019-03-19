@@ -18,8 +18,8 @@ object MapFileReaderSpec : Spek({
 			val map = reader.read()
 
 			it("should read header correctly") {
-				assertThat(map.eastLength).isEqualTo(0x0348)
-				assertThat(map.southLength).isEqualTo(0x0262)
+				assertThat(map.dimension.east).isEqualTo(0x0348)
+				assertThat(map.dimension.south).isEqualTo(0x0262)
 
 				// TODO: check the rest of the header
 			}

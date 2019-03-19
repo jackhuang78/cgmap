@@ -49,9 +49,7 @@ object Map : CliktCommand(help = "Show info for a Map entity") {
 
 		echo("File ${mapFile}:")
 		echo("  Magic = 0x${map.magic.toHex()}")
-		echo("  Size = ${map.size}")
-		echo("  EastLength = ${map.eastLength}")
-		echo("  SouthLength = ${map.southLength}")
+		echo("  Dimension = ${map.dimension}")
 
 
 	}

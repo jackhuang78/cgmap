@@ -43,14 +43,15 @@ class MapViewPainter(
 			drawFloor: Boolean,
 			tileOrigin: Point) {
 
-		val tileNumber = tile.getTileNumber(map.eastLength, map.southLength)
+		val tileNumber = tile.getTileNumber(map.dimension.east, map.dimension.south)
 
 		if (tileNumber != null) {
 			val graphicMapNumber = if (drawFloor)
 				map.floors[tileNumber] else map.entities[tileNumber]
 
-			if (graphicMapNumber !in setOf(0, 2, 999, 100) ) {
-				val graphicInfo = graphicInfoFileReader.readByGraphicId(graphicMapNumber)
+			if (graphicMapNumber !in setOf(0, 2, 999, 100)) {
+				val graphicInfo = graphicInfoFileReader.readByGraphicId(
+						graphicMapNumber)
 				val graphic = graphicFileReader.read(graphicInfo.address,
 						graphicInfo.dataLength)
 
@@ -89,7 +90,6 @@ class MapViewPainter(
 							tileOrigin.y + TILE_DIMENSION.height / 2
 					), 5)
 		}
-
 
 
 	}

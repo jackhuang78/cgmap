@@ -54,16 +54,14 @@ class MapFileReader(private val path: Path) {
 
 			val map = Map(
 					magic = magic,
-					eastLength = eastLength,
-					southLength = southLength,
+					dimension = Map.Size(eastLength, southLength),
 					floors = floors,
 					entities = entities,
 					attributes = attributes)
 
 			check(map.magic == MAGIC)
-			check(map.eastLength > 0)
-			check(map.southLength > 0)
-			check(map.size > 0)
+			check(map.dimension.east > 0)
+			check(map.dimension.south > 0)
 
 			return map
 		}
