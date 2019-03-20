@@ -55,7 +55,7 @@ class MapViewPainter(
 				val graphic = graphicFileReader.read(graphicInfo.address,
 						graphicInfo.dataLength)
 
-				paintGraphic(g, graphicInfo, graphic, palet, tileOrigin)
+				GraphicPainter(graphicInfo, graphic, palet, tileOrigin).paint(g)
 			} else {
 				println("$tileNumber, $graphicMapNumber")
 			}
