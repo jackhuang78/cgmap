@@ -8,7 +8,7 @@ import org.jetbrains.spek.api.dsl.it
 import java.nio.ByteBuffer
 import java.util.*
 
-class GraphicDataDecoderTest : Spek({
+object GraphicDataDecoderSpec : Spek({
 	describe("a GraphicDataDecoder") {
 		val r1 = Random(0)
 		val r2 = Random(0)
