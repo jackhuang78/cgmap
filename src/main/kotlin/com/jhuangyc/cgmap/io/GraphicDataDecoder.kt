@@ -14,20 +14,11 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 	 * Identifier for the different types of section
 	 */
 	enum class Section {
-
-		/**
-		 * Section with starting byte = 0, 1, 2, or 3.
-		 */
+		/** Section with starting byte = 0, 1, 2, or 3. */
 		S0,
-
-		/**
-		 * Section with starting byte = 8, 9, A, or B.
-		 */
+		/** Section with starting byte = 8, 9, A, or B. */
 		S2,
-
-		/**
-		 * Section with starting byte = C, D, E, or F.
-		 */
+		/** Section with starting byte = C, D, E, or F. */
 		S3,
 	}
 
@@ -35,29 +26,15 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 	 * The state of the decoder FSN
 	 */
 	data class State(
-			/**
-			 * The type of current section
-			 */
+			/** The type of current section. */
 			val section: Section? = null,
-
-			/**
-			 * The starting index of this section
-			 */
+			/** The starting index of this section. */
 			val startIdx: Int = 0,
-
-			/**
-			 * The number of iterations spent in the current section
-			 */
+			/** The number of iterations spent in the current section. */
 			val iteration: Int = 0,
-
-			/**
-			 * Number of bytes used to specify the number of colors
-			 */
+			/** Number of bytes used to specify the number of colors. */
 			val numColorSize: Int = 0,
-
-			/**
-			 * Number of colors contained in this section
-			 */
+			/** Number of colors contained in this section. */
 			val numColors: Int = 0)
 
 	override fun iterator(): Iterator<Int?> {
