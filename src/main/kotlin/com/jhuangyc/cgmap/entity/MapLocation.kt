@@ -1,5 +1,6 @@
 package com.jhuangyc.cgmap.entity
 
+@Deprecated("Use Map.Point instead")
 data class MapLocation(
 		var east: Int = 0,
 		var south: Int = 0) {
