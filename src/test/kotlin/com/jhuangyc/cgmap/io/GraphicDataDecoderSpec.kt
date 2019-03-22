@@ -7,129 +7,138 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import java.nio.ByteBuffer
-import java.util.*
+import kotlin.random.nextUBytes
 
+@ExperimentalUnsignedTypes
 object GraphicDataDecoderSpec : Spek({
-	val r1 = Random(0)
-	val r2 = Random(0)
+
+	fun UByteArray.toNullable() = Array<UByte?>(size) { get(it) }
+	operator fun UByteArray.plus(that: UByteArray) =
+			UByteArray(this.size + that.size) {
+				if (it < this.size) this[it] else that[it - this.size]
+			}
+
+
+	val inputRng = kotlin.random.Random(0)
+	val outputRng = kotlin.random.Random(0)
 
 	listOf(
 			arrayOf("01",
-					listOf(0x01, 0x23),
-					listOf(0x23)),
+					ubyteArrayOf(0x01u, 0x23u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("02",
-					listOf(0x02, 0x34, 0x56),
-					listOf(0x34, 0x56)),
+					ubyteArrayOf(0x02u, 0x34u, 0x56u),
+					arrayOf<UByte?>(0x34u, 0x56u)),
 			arrayOf("0F",
-					listOf(0x0F).appendRandom(0x0F, r1),
-					listOf<Int>().appendRandom(0x0F, r2)),
+					ubyteArrayOf(0x0Fu) + inputRng.nextUBytes(0x0F),
+					outputRng.nextUBytes(0x0F).toNullable()),
 			arrayOf("10 01",
-					listOf(0x10, 0x01, 0x23),
-					listOf(0x23)),
+					ubyteArrayOf(0x10u, 0x01u, 0x23u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("11 12",
-					listOf(0x11, 0x23).appendRandom(0x123, r1),
-					listOf<Int>().appendRandom(0x123, r2)),
+					ubyteArrayOf(0x11u, 0x23u) + inputRng.nextUBytes(0x123),
+					outputRng.nextUBytes(0x123).toNullable()),
 			arrayOf("1F FF",
-					listOf(0x1F, 0xFF).appendRandom(0xFFF, r1),
-					listOf<Int>().appendRandom(0xFFF, r2)),
+					ubyteArrayOf(0x1Fu, 0xFFu) + inputRng.nextUBytes(0xFFF),
+					outputRng.nextUBytes(0xFFF).toNullable()),
 			arrayOf("20 00 01",
-					listOf(0x20, 0x00, 0x01, 0x23),
-					listOf(0x23)),
+					ubyteArrayOf(0x20u, 0x00u, 0x01u, 0x23u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("21 12 34",
-					listOf(0x21, 0x23, 0x45).appendRandom(0x12345, r1),
-					listOf<Int>().appendRandom(0x12345, r2)),
+					ubyteArrayOf(0x21u, 0x23u, 0x45u) + inputRng.nextUBytes(0x12345),
+					outputRng.nextUBytes(0x12345).toNullable()),
 			arrayOf("2F FF FF",
-					listOf(0x2F, 0xFF, 0xFF).appendRandom(0xFFFFF, r1),
-					listOf<Int>().appendRandom(0xFFFFF, r2)),
+					ubyteArrayOf(0x2Fu, 0xFFu, 0xFFu) + inputRng.nextUBytes(0xFFFFF),
+					outputRng.nextUBytes(0xFFFFF).toNullable()),
 			arrayOf("81",
-					listOf(0x81, 0x23),
-					listOf(0x23)),
+					ubyteArrayOf(0x81u, 0x23u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("82",
-					listOf(0x82, 0x23),
-					listOf(0x23, 0x23)),
+					ubyteArrayOf(0x82u, 0x23u),
+					arrayOf<UByte?>(0x23u, 0x23u)),
 			arrayOf("8F",
-					listOf(0x8F, 0x23),
-					listOf<Int>().appendRepeated(0xF, 0x23)),
+					ubyteArrayOf(0x8Fu, 0x23u),
+					Array<UByte?>(0xF) { 0x23u }),
 			arrayOf("90 01",
-					listOf(0x90, 0x23, 0x01),
-					listOf(0x23)),
+					ubyteArrayOf(0x90u, 0x23u, 0x01u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("90 12",
-					listOf(0x91, 0x45, 0x23),
-					listOf<Int>().appendRepeated(0x123, 0x45)),
+					ubyteArrayOf(0x91u, 0x45u, 0x23u),
+					Array<UByte?>(0x123) { 0x45u }),
 			arrayOf("9F FF",
-					listOf(0x9F, 0x45, 0xFF),
-					listOf<Int>().appendRepeated(0xFFF, 0x45)),
+					ubyteArrayOf(0x9Fu, 0x45u, 0xFFu),
+					Array<UByte?>(0xFFF) { 0x45u }),
 			arrayOf("A0 00 01",
-					listOf(0xA0, 0x23, 0x00, 0x01),
-					listOf(0x23)),
+					ubyteArrayOf(0xA0u, 0x23u, 0x00u, 0x01u),
+					arrayOf<UByte?>(0x23u)),
 			arrayOf("A0 12 34",
-					listOf(0xA1, 0x67, 0x23, 0x45),
-					listOf<Int>().appendRepeated(0x12345, 0x67)),
+					ubyteArrayOf(0xA1u, 0x67u, 0x23u, 0x45u),
+					Array<UByte?>(0x12345) { 0x67u }),
 			arrayOf("AF FF FF",
-					listOf(0xAF, 0x67, 0xFF, 0xFF),
-					listOf<Int>().appendRepeated(0xFFFFF, 0x67)),
+					ubyteArrayOf(0xAFu, 0x67u, 0xFFu, 0xFFu),
+					Array<UByte?>(0xFFFFF) { 0x67u }),
 			arrayOf("C1",
-					listOf(0xC1),
-					listOf(null)),
+					ubyteArrayOf(0xC1u),
+					arrayOf<UByte?>(null)),
 			arrayOf("C2",
-					listOf(0xC2),
-					listOf(null, null)),
+					ubyteArrayOf(0xC2u),
+					arrayOf<UByte?>(null, null)),
 			arrayOf("CF",
-					listOf(0xCF),
-					listOf<Int>().appendRepeated(0xF, null)),
+					ubyteArrayOf(0xCFu),
+					Array<UByte?>(0xF) { null }),
 			arrayOf("D0 01",
-					listOf(0xD0, 0x01),
-					listOf(null)),
+					ubyteArrayOf(0xD0u, 0x01u),
+					arrayOf<UByte?>(null)),
 			arrayOf("D1 23",
-					listOf(0xD1, 0x23),
-					listOf<Int>().appendRepeated(0x123, null)),
+					ubyteArrayOf(0xD1u, 0x23u),
+					Array<UByte?>(0x123) { null }),
 			arrayOf("DF FF",
-					listOf(0xDF, 0xFF),
-					listOf<Int>().appendRepeated(0xFFF, null)),
+					ubyteArrayOf(0xDFu, 0xFFu),
+					Array<UByte?>(0xFFF) { null }),
 			arrayOf("E0 00 01",
-					listOf(0xE0, 0x00, 0x01),
-					listOf(null)),
+					ubyteArrayOf(0xE0u, 0x00u, 0x01u),
+					arrayOf<UByte?>(null)),
 			arrayOf("E1 23 45",
-					listOf(0xE1, 0x23, 0x45),
-					listOf<Int>().appendRepeated(0x12345, null)),
+					ubyteArrayOf(0xE1u, 0x23u, 0x45u),
+					Array<UByte?>(0x12345) { null }),
 			arrayOf("EF FF FF",
-					listOf(0xEF, 0xFF, 0xFF),
-					listOf<Int>().appendRepeated(0xFFFFF, null)),
+					ubyteArrayOf(0xEFu, 0xFFu, 0xFFu),
+					Array<UByte?>(0xFFFFF) { null }),
 			arrayOf("Mixed",
-					listOf<Int>()
-							.append(0x01).appendRandom(0x1, r1)
-							.append(0x12, 0x02).appendRandom(0x202, r1)
-							.append(0x23, 0x03, 0x03).appendRandom(0x30303, r1)
-							.append(0x89, 0x09)
-							.append(0x9A, 0x0A, 0x0B)
-							.append(0xAB, 0x0B, 0x0C, 0x0D)
-							.append(0xCD)
-							.append(0xDE, 0x0E)
-							.append(0xEF, 0x0F, 0x10),
-					listOf<Int>()
-							.appendRandom(0x1, r2)
-							.appendRandom(0x202, r2)
-							.appendRandom(0x30303, r2)
-							.appendRepeated(0x09, 0x09)
-							.appendRepeated(0xA0B, 0x0A)
-							.appendRepeated(0xB0C0D, 0x0B)
-							.appendRepeated(0xD, null)
-							.appendRepeated(0xE0E, null)
-							.appendRepeated(0xF0F10, null))
+					ubyteArrayOf(0x01u) + inputRng.nextUBytes(0x1) +
+							ubyteArrayOf(0x12u, 0x02u) + inputRng.nextUBytes(0x202) +
+							ubyteArrayOf(0x23u, 0x03u, 0x03u) + inputRng.nextUBytes(0x30303) +
+							ubyteArrayOf(0x89u, 0x09u) +
+							ubyteArrayOf(0x9Au, 0x0Au, 0x0Bu) +
+							ubyteArrayOf(0xABu, 0x0Bu, 0x0Cu, 0x0Du) +
+							ubyteArrayOf(0xCDu) +
+							ubyteArrayOf(0xDEu, 0x0Eu) +
+							ubyteArrayOf(0xEFu, 0x0Fu, 0x10u),
+					outputRng.nextUBytes(0x1).toNullable() +
+							outputRng.nextUBytes(0x202).toNullable() +
+							outputRng.nextUBytes(0x30303).toNullable() +
+							Array<UByte?>(0x09) { 0x09u } +
+							Array<UByte?>(0xA0B) { 0x0Au } +
+							Array<UByte?>(0xB0C0D) { 0x0Bu } +
+							Array<UByte?>(0xD) { null } +
+							Array<UByte?>(0xE0E) { null } +
+							Array<UByte?>(0xF0F10) { null })
 
 	).forEach { (name, data, expected) ->
 		given("a decoder with data ${name}") {
-			val decoder = GraphicDataDecoder((data as List<Int?>).toByteBuffer())
+			val bytes = ByteBuffer.wrap((data as UByteArray).asByteArray())
+			val decoder = GraphicDataDecoder(bytes)
 
 			on("iterator()") {
-				val expectedIterator = (expected as List<Int?>).iterator()
+				val expectedIterator = (expected as Array<UByte?>).iterator()
 				val actual = decoder.iterator()
 
 				it("should iterate and decode data correctly") {
 					var iteration = 0
 					while (expectedIterator.hasNext()) {
 						assertWithMessage("${iteration}").that(actual.hasNext()).isTrue()
-						assertWithMessage("${iteration}").that(actual.next()).isEqualTo(
+						assertWithMessage("${iteration}").that(
+								actual.next()?.toUByte()).isEqualTo(
 								expectedIterator.next())
 						iteration++
 					}
@@ -140,24 +149,4 @@ object GraphicDataDecoderSpec : Spek({
 	}
 })
 
-fun List<Int?>.toByteBuffer() = ByteBuffer.wrap(
-		this.map { it!!.toByte() }.toByteArray()
-)
 
-fun List<Int?>.appendRandom(n: Int, r: Random): List<Int?> {
-	val ml = this.toMutableList()
-	ml.addAll((1..n).map { r.nextInt(256) })
-	return ml
-}
-
-fun List<Int?>.appendRepeated(n: Int, v: Int?): List<Int?> {
-	val ml = this.toMutableList()
-	ml.addAll((1..n).map { v })
-	return ml
-}
-
-fun List<Int?>.append(vararg vs: Int?): List<Int?> {
-	val ml = this.toMutableList()
-	ml.addAll(vs.toList())
-	return ml
-}
