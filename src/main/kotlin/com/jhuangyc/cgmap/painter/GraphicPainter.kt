@@ -5,11 +5,11 @@ import com.jhuangyc.cgmap.entity.GraphicInfo
 import com.jhuangyc.cgmap.entity.Palet
 import com.jhuangyc.cgmap.io.GraphicDataDecoder
 import com.jhuangyc.cgmap.util.asIterable
-import com.jhuangyc.cgmap.util.toUint
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.image.BufferedImage
 
+@ExperimentalUnsignedTypes
 class GraphicPainter(
 		private val info: GraphicInfo,
 		private val graphic: Graphic,
@@ -27,7 +27,7 @@ class GraphicPainter(
 
 	fun paint(g: Graphics2D) {
 		val colorIterator = when (graphic.version) {
-			Graphic.Version.RAW -> graphic.data.asIterable().map { it.toUint() }
+			Graphic.Version.RAW -> graphic.data.asIterable().map { it.toUByte() }
 			Graphic.Version.ENCODED -> GraphicDataDecoder(graphic.data)
 		}.iterator()
 
@@ -35,7 +35,7 @@ class GraphicPainter(
 			for (x in 0 until info.imageWidth) {
 				val colorPoint = colorIterator.next()
 				if (colorPoint != null) {
-					g.color = palet.colors[colorPoint]
+					g.color = palet.colors[colorPoint.toInt()]
 					g.fillRect(origin.x + x, origin.y + y, 1, 1)
 				}
 			}

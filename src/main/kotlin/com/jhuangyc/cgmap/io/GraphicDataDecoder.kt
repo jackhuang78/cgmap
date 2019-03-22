@@ -8,7 +8,8 @@ import java.nio.ByteBuffer
 /**
  * A class to decode the data portion of a Graphic into color points in the Palet.
  */
-class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
+@ExperimentalUnsignedTypes
+class GraphicDataDecoder(val data: ByteBuffer) : Iterable<UByte?> {
 
 	/**
 	 * Identifier for the different types of section
@@ -37,8 +38,8 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 			/** Number of colors contained in this section. */
 			val numColors: Int = 0)
 
-	override fun iterator(): Iterator<Int?> {
-		return object : Iterator<Int?> {
+	override fun iterator(): Iterator<UByte?> {
+		return object : Iterator<UByte?> {
 
 			// Initialize state
 			var state = State(section = null, startIdx = 0)
@@ -47,7 +48,7 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 				return (state.startIdx < data.capacity())
 			}
 
-			override fun next(): Int? {
+			override fun next(): UByte? {
 				check(state.startIdx < data.capacity())
 				val (output, nextState) = processState(state)
 				state = nextState
@@ -56,7 +57,7 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 		}
 	}
 
-	private fun processState(state: State): Pair<Int?, State> {
+	private fun processState(state: State): Pair<UByte?, State> {
 		if (state.section == null) {
 			val (section, numColorSize, numColors) = parseHeader(state)
 			return processState(state.copy(
@@ -102,10 +103,10 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<Int?> {
 		return Triple(section, numColorSize, numColors)
 	}
 
-	private fun getColor(state: State): Int? {
+	private fun getColor(state: State): UByte? {
 		return when (state.section!!) {
-			Section.S0 -> data[state.startIdx + 1 + state.numColorSize + state.iteration].toUint()
-			Section.S2 -> data[state.startIdx + 1].toUint()
+			Section.S0 -> data[state.startIdx + 1 + state.numColorSize + state.iteration].toUByte()
+			Section.S2 -> data[state.startIdx + 1].toUByte()
 			Section.S3 -> null
 		}
 	}

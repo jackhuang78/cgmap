@@ -131,7 +131,6 @@ object GraphicDataDecoderSpec : Spek({
 			on("iterator()") {
 				val actualValues = decoder.iterator()
 						.asSequence()
-						.map { it?.toUByte() }
 						.toList()
 				val expectedValues = (expected as Array<UByte?>).iterator()
 						.asSequence()
