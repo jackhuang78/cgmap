@@ -11,9 +11,9 @@ fun Byte.toHex() = "%02x".format(this)
 fun Int.toHex() = "%04x".format(this)
 
 /**
- *
+ * Extract bits from a byte.
  */
-fun Byte.bits(msb: Int,
-		lsb: Int) = (this.toUByte().toInt() shr lsb) and (0x000000FF ushr (7 - msb + lsb))
+fun Byte.bits(msb: Int, lsb: Int) =
+		(this.toUByte().toInt() shr lsb) and (0x000000FF ushr (7 - msb + lsb))
 
 
