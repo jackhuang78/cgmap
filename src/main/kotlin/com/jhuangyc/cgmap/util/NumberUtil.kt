@@ -1,11 +1,6 @@
 package com.jhuangyc.cgmap.util
 
 /**
- * Unsigned-extends a short to an int.
- */
-fun Short.toUint() = (this.toInt() and 0x0000FFFF)
-
-/**
  * Unsigned-extends a byte to an int.
  */
 fun Byte.toUint() = (this.toInt() and 0x000000FF)

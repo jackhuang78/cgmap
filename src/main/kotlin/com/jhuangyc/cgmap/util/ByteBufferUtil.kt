@@ -2,6 +2,8 @@ package com.jhuangyc.cgmap.util
 
 import java.nio.ByteBuffer
 
+fun ByteBuffer.getUShort() = this.getShort().toUShort()
+
 /**
  * Converts a ByteBuffer into a 2D memory map representation
  */

@@ -3,6 +3,7 @@ package com.jhuangyc.cgmap.io
 import com.jhuangyc.cgmap.entity.Graphic
 import com.jhuangyc.cgmap.entity.Graphic.Version.ENCODED
 import com.jhuangyc.cgmap.entity.Graphic.Version.RAW
+import com.jhuangyc.cgmap.util.getUShort
 import com.jhuangyc.cgmap.util.toUint
 import mu.KotlinLogging
 import java.nio.ByteOrder.LITTLE_ENDIAN
@@ -39,7 +40,7 @@ class GraphicFileReader(private val path: Path) : AutoCloseable {
 				.order(LITTLE_ENDIAN)
 
 		val graphic = Graphic(
-				magic = buffer.getShort().toUint(),
+				magic = buffer.getUShort().toInt(),
 				version = if (buffer.get().toUint() == 0) RAW else ENCODED,
 				unknown = buffer.get().toUint(),
 				width = buffer.getInt(),
