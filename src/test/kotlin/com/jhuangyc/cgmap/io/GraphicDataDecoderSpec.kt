@@ -1,7 +1,6 @@
 package com.jhuangyc.cgmap.io
 
 import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -18,7 +17,7 @@ object GraphicDataDecoderSpec : Spek({
 				if (it < this.size) this[it] else that[it - this.size]
 			}
 
-
+	// Set the same seed so they generate the same random numbers
 	val inputRng = kotlin.random.Random(0)
 	val outputRng = kotlin.random.Random(0)
 
@@ -130,19 +129,18 @@ object GraphicDataDecoderSpec : Spek({
 			val decoder = GraphicDataDecoder(bytes)
 
 			on("iterator()") {
-				val expectedIterator = (expected as Array<UByte?>).iterator()
-				val actual = decoder.iterator()
+				val actualValues = decoder.iterator()
+						.asSequence()
+						.map { it?.toUByte() }
+						.toList()
+				val expectedValues = (expected as Array<UByte?>).iterator()
+						.asSequence()
+						.toList()
 
 				it("should iterate and decode data correctly") {
-					var iteration = 0
-					while (expectedIterator.hasNext()) {
-						assertWithMessage("${iteration}").that(actual.hasNext()).isTrue()
-						assertWithMessage("${iteration}").that(
-								actual.next()?.toUByte()).isEqualTo(
-								expectedIterator.next())
-						iteration++
-					}
-					assertThat(actual.hasNext()).isFalse()
+					assertThat(actualValues)
+							.containsExactlyElementsIn(expectedValues)
+							.inOrder()
 				}
 			}
 		}
