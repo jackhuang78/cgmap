@@ -2,7 +2,6 @@ package com.jhuangyc.cgmap.io
 
 import com.jhuangyc.cgmap.util.asIterable
 import com.jhuangyc.cgmap.util.bits
-import com.jhuangyc.cgmap.util.toUint
 import java.nio.ByteBuffer
 
 /**
@@ -97,7 +96,7 @@ class GraphicDataDecoder(val data: ByteBuffer) : Iterable<UByte?> {
 		// Calculate number of colors in this section
 		check(numColorSize < 3)
 		for (i in 0 until numColorSize) {
-			numColors = (numColors shl 8) + byteIterator.next().toUint()
+			numColors = (numColors shl 8) + byteIterator.next().toUByte().toInt()
 		}
 
 		return Triple(section, numColorSize, numColors)

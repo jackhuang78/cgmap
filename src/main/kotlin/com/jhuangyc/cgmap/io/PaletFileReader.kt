@@ -1,7 +1,7 @@
 package com.jhuangyc.cgmap.io
 
 import com.jhuangyc.cgmap.entity.Palet
-import com.jhuangyc.cgmap.util.toUint
+import com.jhuangyc.cgmap.util.getUByte
 import java.awt.Color
 import java.nio.channels.FileChannel
 import java.nio.file.Path
@@ -58,9 +58,9 @@ class PaletFileReader(private val file: Path) {
 				when (colorIndex) {
 					in 0..15 -> PRESET_COLORS_0_15[colorIndex]
 					in 16..239 -> {
-						val b = buffer.get().toUint()
-						val g = buffer.get().toUint()
-						val r = buffer.get().toUint()
+						val b = buffer.getUByte().toInt()
+						val g = buffer.getUByte().toInt()
+						val r = buffer.getUByte().toInt()
 						Color(r, g, b)
 					}
 					in 240..255 -> PRESET_COLORS_240_255[colorIndex - 240]
