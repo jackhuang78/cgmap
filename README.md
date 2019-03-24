@@ -1,5 +1,7 @@
 # CrossGate Mapping Tool
 
+[![Build Status](https://travis-ci.com/jhuangyc/cgmap.svg?branch=master)](https://travis-ci.com/jhuangyc/cgmap)
+
 ## Commends
 
 ```bash
