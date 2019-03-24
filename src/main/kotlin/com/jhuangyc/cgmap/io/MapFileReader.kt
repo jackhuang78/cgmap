@@ -2,7 +2,6 @@ package com.jhuangyc.cgmap.io
 
 import com.google.common.primitives.Ints
 import com.jhuangyc.cgmap.entity.Map
-import com.jhuangyc.cgmap.util.getUShort
 import com.jhuangyc.cgmap.util.toHex
 import mu.KotlinLogging
 import java.nio.ByteOrder.LITTLE_ENDIAN
@@ -36,10 +35,10 @@ class MapFileReader(private val path: Path) {
 			val eastLength = buffer.getInt()
 			val southLength = buffer.getInt()
 			val size = eastLength * southLength
-			val floors = List(size) { buffer.getUShort().toInt() }
-			val entities = List(size) { buffer.getUShort().toInt() }
+			val floors = List(size) { buffer.getShort().toUShort().toInt() }
+			val entities = List(size) { buffer.getShort().toUShort().toInt() }
 			val attributes = List(size) {
-				when (buffer.getUShort().toInt()) {
+				when (buffer.getShort().toUShort().toInt()) {
 					0x0000 -> Map.Attribute.VOID
 					0xC000 -> Map.Attribute.FLOOR
 					0xC00A -> Map.Attribute.WRAP
