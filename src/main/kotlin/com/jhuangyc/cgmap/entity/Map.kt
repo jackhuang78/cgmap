@@ -37,5 +37,15 @@ data class Map(
 			val east: Int,
 			/** The nth tile in the lower right direction. */
 			val south: Int
-	)
+	) {
+		operator fun plus(delta: Point) = Point(east + delta.east,
+				south + delta.south)
+
+		operator fun minus(delta: Point) = Point(east - delta.east,
+				south - delta.south)
+
+		operator fun times(scale: Int) = Point(east * scale, south * scale)
+		operator fun div(scale: Int) = Point(east / scale, south / scale)
+	}
+
 }

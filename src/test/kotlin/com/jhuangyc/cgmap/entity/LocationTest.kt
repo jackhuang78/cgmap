@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.xdescribe
 
 // TODO: clean up this class
 class LocationTest : Spek({
@@ -19,7 +20,7 @@ class LocationTest : Spek({
 			val expectedTileNumber: Int? = 0
 	)
 
-	describe("MapLocation") {
+	xdescribe("MapLocation") {
 		describe("moveEast()") {
 			listOf(
 					Case(delta = 0, expectedEast = 0, expectedTileNumber = 0),

@@ -57,7 +57,7 @@ data class GraphicInfo(
 		val occupySouth: Int = 0,
 
 		/**
-		 * Map property of this Graphic.
+		 * MapCommand property of this Graphic.
 		 */
 		val mapMarker: MapMarker = MapMarker.OBSTACLE,
 

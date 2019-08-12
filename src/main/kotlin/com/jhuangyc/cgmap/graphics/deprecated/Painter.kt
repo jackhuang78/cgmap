@@ -60,7 +60,7 @@
 //
 //fun paintMap(
 //        g: Graphics2D,
-//        view: Map,
+//        view: MapCommand,
 //        dataFileReader: DataFileReader,
 //        palet: GraphicPalet,
 //        grid: Boolean = false,
