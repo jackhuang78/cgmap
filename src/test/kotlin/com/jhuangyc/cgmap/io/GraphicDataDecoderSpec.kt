@@ -114,12 +114,12 @@ object GraphicDataDecoderSpec : Spek({
 			outputRng.nextUBytes(0x1).toNullable() +
 				outputRng.nextUBytes(0x202).toNullable() +
 				outputRng.nextUBytes(0x30303).toNullable() +
-				Array(0x09) { 0x09u } +
-				Array(0xA0B) { 0x0Au } +
-				Array(0xB0C0D) { 0x0Bu } +
-				Array(0xD) { null } +
-				Array(0xE0E) { null } +
-				Array(0xF0F10) { null })
+				Array<UByte?>(0x09) { 0x09u } +
+				Array<UByte?>(0xA0B) { 0x0Au } +
+				Array<UByte?>(0xB0C0D) { 0x0Bu } +
+				Array<UByte?>(0xD) { null } +
+				Array<UByte?>(0xE0E) { null } +
+				Array<UByte?>(0xF0F10) { null })
 
 	).forEach { (name, data, expected) ->
 
@@ -131,6 +131,7 @@ object GraphicDataDecoderSpec : Spek({
 				.asSequence()
 				.toList()
 
+			@Suppress("UNCHECKED_CAST")
 			val expectedValues = (expected as Array<UByte?>).iterator()
 				.asSequence()
 				.toList()

@@ -20,6 +20,15 @@ repositories {
 	jcenter()
 }
 
+kotlin {
+	sourceSets {
+		all {
+			// Enables all experimental features
+			languageSettings.progressiveMode = true
+		}
+	}
+}
+
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		jvmTarget = "1.8"
