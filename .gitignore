@@ -1,8 +1,20 @@
-/.idea/
-/.gradle/
-/build/
-/data/
-/cgmap.iml
-/filesystem_graphicmap_files
-/filesystem_graphicmap.htm
-/out/
+# Ignore Intellij project config files and directory
+.idea
+cgmap.iml
+
+# Ignore gradle cache directory
+.gradle
+
+# Ignore build output directory
+build
+
+# Ignore data directory
+data
+
+# Ignore program run output directory
+out
+
+# TODO: figure out what these files are for
+filesystem_graphicmap_files
+filesystem_graphicmap.htm
+
