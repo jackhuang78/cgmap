@@ -31,7 +31,13 @@ dependencies {
 	// Use the Kotlin JDK 8 standard library
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-	// Log4j and Kotlin-Logging (logging libarary)
+	// Guava (general utility)
+	implementation("com.google.guava:guava:23.0")
+
+	// Clikt (command line parsing library)
+	implementation("com.github.ajalt:clikt:1.6.0")
+
+	// Log4j and Kotlin-Logging (logging library)
 	val log4jVer = "2.8.1"
 	implementation("org.apache.logging.log4j:log4j-api:$log4jVer")
 	implementation("org.apache.logging.log4j:log4j-core:$log4jVer")
