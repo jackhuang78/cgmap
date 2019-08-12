@@ -7,40 +7,47 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 
 plugins {
-    // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM
-    id("org.jetbrains.kotlin.jvm").version("1.3.41")
+	// Apply the Kotlin JVM plugin to add support for Kotlin on the JVM
+	id("org.jetbrains.kotlin.jvm").version("1.3.41")
 
-    // Apply the application to add support for building a CLI application
-    application
+	// Apply the application to add support for building a CLI application
+	application
 }
 
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+	// Use jcenter for resolving your dependencies.
+	// You can declare any Maven/Ivy/file repository here.
+	jcenter()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 }
 
 dependencies {
 
-    // Use the Kotlin JDK 8 standard library
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	// Use the Kotlin JDK 8 standard library
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // Spek (unit test framework)
-    val spekVer = "2.0.6"
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVer")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spekVer")
+	// Log4j and Kotlin-Logging (logging libarary)
+	val log4jVer = "2.8.1"
+	implementation("org.apache.logging.log4j:log4j-api:$log4jVer")
+	implementation("org.apache.logging.log4j:log4j-core:$log4jVer")
+	implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVer")
+	implementation("io.github.microutils:kotlin-logging:1.6.22")
 
-    // Strikt (assertion library)
-    testImplementation("io.strikt:strikt-core:0.21.1")
+	// Spek (unit test framework)
+	val spekVer = "2.0.6"
+	testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVer")
+	testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spekVer")
+
+	// Strikt (assertion library)
+	testImplementation("io.strikt:strikt-core:0.21.1")
 }
 
 application {
-    // Define the main class for the application
-    mainClassName = "com.jhuangyc.cgmap.MainKt"
+	// Define the main class for the application
+	mainClassName = "com.jhuangyc.cgmap.MainKt"
 }
