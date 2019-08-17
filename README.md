@@ -6,11 +6,11 @@
 
 ```bash
 # To build
-gradle jar
+./gradlew jar
 
 # To run
 java -jar build/lib/cgmap.jar --help
 
 # Alternatively, to both build and run
-gradle run --args " --help"
+./gradlew run --args " --help"
 ```
