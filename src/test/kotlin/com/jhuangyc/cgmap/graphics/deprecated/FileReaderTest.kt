@@ -1,4 +1,4 @@
-//package com.jhuang78.cgmap.graphics
+package com.jhuang78.cgmap.graphics
 //
 //import com.google.common.io.Resources
 //import com.google.common.truth.Truth.assertThat

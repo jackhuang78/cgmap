@@ -29,7 +29,7 @@ object MapCommand :
 
 	private val paint: Boolean by option(
 			"-p",
-			help = "Paint the Graphic to screen or file")
+			help = "Paint the GraphicCommand to screen or file")
 			.flag()
 
 	private val graphicInfoFile: Path by option(
@@ -40,7 +40,7 @@ object MapCommand :
 
 	private val graphicFile: Path by option(
 			"--graphic_file",
-			help = "The Graphic file (.bin)")
+			help = "The GraphicCommand file (.bin)")
 			.path(exists = true, folderOkay = false)
 			.default(Paths.get("data", "Graphic_66.bin"))
 
@@ -61,7 +61,7 @@ object MapCommand :
 
 		val painter = MapPainter(map)
 
-		JFrame("CGMap Graphic").let { frame ->
+		JFrame("MainCommand GraphicCommand").let { frame ->
 			frame.add(object : JPanel() {
 				override fun paint(g: Graphics?) {
 					painter.paint(g as Graphics2D, Map.Point(0, 0),

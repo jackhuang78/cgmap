@@ -1,8 +1,14 @@
-/.idea/
-/.gradle/
-/build/
-/data/
-/cgmap.iml
-/filesystem_graphicmap_files
-/filesystem_graphicmap.htm
-/out/
+# Ignore IntelliJ IDEA config directory
+.idea
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# Ignore application input data directory
+data
+
+# Ignore application output directory
+out

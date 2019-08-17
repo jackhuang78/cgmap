@@ -1,25 +1,23 @@
 package com.jhuangyc.cgmap.io
 
-import com.google.common.truth.Truth.assertThat
 import com.jhuangyc.cgmap.util.fromResources
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.given
-import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
+import org.spekframework.spek2.Spek
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import java.nio.file.Paths
 
 object MapFileReaderSpec : Spek({
 
-	given("a reader") {
+	test("Should read the map header") {
 		val file = Paths.get("map", "0", "100.dat").fromResources()
 		val reader = MapFileReader(file)
 
-		on("read()") {
-			val map = reader.read()
+		val map = reader.read()
 
-			it("should read header correctly") {
-				assertThat(map.dimension.east).isEqualTo(0x0348)
-				assertThat(map.dimension.south).isEqualTo(0x0262)
+		expectThat(map) {
+			get { dimension }.and {
+				get { east }.isEqualTo(0x0348)
+				get { south }.isEqualTo(0x0262)
 
 				// TODO: check the rest of the header
 			}

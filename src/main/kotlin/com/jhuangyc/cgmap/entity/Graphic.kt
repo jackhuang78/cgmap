@@ -3,12 +3,12 @@ package com.jhuangyc.cgmap.entity
 import java.nio.ByteBuffer
 
 /**
- * A Graphic contains the data (raw or encoded) of a piece of graphic on the
+ * A GraphicCommand contains the data (raw or encoded) of a piece of graphic on the
  * map.
  */
 data class Graphic(
 		/**
-		 * A magic number to mapMarker the beginning of a Graphic in the Graphic.bin
+		 * A magic number to mapMarker the beginning of a GraphicCommand in the GraphicCommand.bin
 		 * file.
 		 */
 		val magic: Int = 0,
@@ -24,17 +24,17 @@ data class Graphic(
 		val unknown: Int = 0,
 
 		/**
-		 * The width of the Graphic when rendered.
+		 * The width of the GraphicCommand when rendered.
 		 */
 		val width: Int = 0,
 
 		/**
-		 * The height of the Graphic when rendered.
+		 * The height of the GraphicCommand when rendered.
 		 */
 		val height: Int = 0,
 
 		/**
-		 * The number of bytes (raw or encoded) this Graphic contains.
+		 * The number of bytes (raw or encoded) this GraphicCommand contains.
 		 */
 		val dataLength: Int = 0,
 
