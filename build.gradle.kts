@@ -44,7 +44,7 @@ dependencies {
 	implementation("com.google.guava:guava:23.0")
 
 	// Clikt (command line parsing library)
-	implementation("com.github.ajalt:clikt:1.6.0")
+	implementation("com.github.ajalt:clikt:2.1.0")
 
 	// Log4j and Kotlin-Logging (logging library)
 	val log4jVer = "2.8.1"
