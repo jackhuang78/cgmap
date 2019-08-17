@@ -61,7 +61,7 @@ object MapCommand :
 
 		val painter = MapPainter(map)
 
-		JFrame("CGMap GraphicCommand").let { frame ->
+		JFrame("MainCommand GraphicCommand").let { frame ->
 			frame.add(object : JPanel() {
 				override fun paint(g: Graphics?) {
 					painter.paint(g as Graphics2D, Map.Point(0, 0),

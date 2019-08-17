@@ -108,7 +108,7 @@ object GraphicCommand : CliktCommand(
 			logger.info("Painting GraphicCommand to file: ${outputFile}")
 			if (outputFile == null) {
 				//region To screen
-				val frame = JFrame("CGMap GraphicCommand")
+				val frame = JFrame("MainCommand GraphicCommand")
 				frame.add(object : JPanel() {
 					override fun paint(g: Graphics?) {
 						g!!.drawImage(paintedGraphic, 0, 0, null)

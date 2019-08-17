@@ -13,7 +13,7 @@ import org.apache.logging.log4j.core.config.Configurator
 /**
  * Top-level CLI command.
  */
-object CGMap : CliktCommand() {
+object MainCommand : CliktCommand() {
 	private val logger = KotlinLogging.logger {}
 
 	//region CLI arguments and flags
@@ -35,7 +35,7 @@ object CGMap : CliktCommand() {
 		//endregion
 
 		//region Displaying banner
-		logger.info("Run CGMap command")
+		logger.info("Run MainCommand command")
 		echo(Resources.getResource("banner.txt").readText())
 		//endregion
 	}
