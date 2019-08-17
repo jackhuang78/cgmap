@@ -5,7 +5,7 @@ import com.jhuangyc.cgmap.util.bits
 import java.nio.ByteBuffer
 
 /**
- * A class to decode the data portion of a Graphic into color points in the Palet.
+ * A class to decode the data portion of a GraphicCommand into color points in the Palet.
  */
 @ExperimentalUnsignedTypes
 class GraphicDataDecoder(val data: ByteBuffer) : Iterable<UByte?> {

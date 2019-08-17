@@ -21,7 +21,7 @@ object CGMap : CliktCommand() {
 	//endregion
 
 	init {
-		subcommands(Graphic, MapCommand)
+		subcommands(GraphicCommand, MapCommand)
 		versionOption("1.0")
 	}
 

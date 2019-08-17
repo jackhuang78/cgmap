@@ -12,7 +12,7 @@ import java.nio.file.StandardOpenOption
 
 
 /**
- * A class to read Graphic from Graphic.bin file.
+ * A class to read GraphicCommand from GraphicCommand.bin file.
  */
 class GraphicFileReader(private val path: Path) : AutoCloseable {
 	companion object {

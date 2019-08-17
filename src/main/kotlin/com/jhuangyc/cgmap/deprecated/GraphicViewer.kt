@@ -25,7 +25,7 @@
 //    infoPanel.add(infoTextArea)
 //
 //    val imagePanel = object: JPanel() {
-//        override fun paint(g: Graphic?) {
+//        override fun paint(g: GraphicCommand?) {
 //            super.paint(g)
 //            infoTextArea.text = "${info}\n\n${data}".replace(",", "\n")
 //            paintGraphic(g as Graphics2D, info, data, palet, zoom=2.0)

@@ -25,7 +25,7 @@
 //    var zoom = 1.0
 //
 //    val imagePanel = object : JPanel() {
-//        override fun paint(g: Graphic?) {
+//        override fun paint(g: GraphicCommand?) {
 //            super.paint(g)
 //            val mapView = mapFileReader.readView(east, south, width, height, infoFileReader)
 //            paintMap(g as Graphics2D, mapView, dataFileReader, palet, grid = grid, tileNo = tileNo, zoom = zoom)
