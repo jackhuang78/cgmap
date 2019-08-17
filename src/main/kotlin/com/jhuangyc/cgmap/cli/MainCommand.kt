@@ -13,11 +13,14 @@ import org.apache.logging.log4j.core.config.Configurator
 /**
  * Top-level CLI command.
  */
-object MainCommand : CliktCommand() {
+object MainCommand : CliktCommand(name = "cgmap") {
 	private val logger = KotlinLogging.logger {}
 
 	//region CLI arguments and flags
-	private val verbose: Int by option("-v").counted()
+	private val verbose: Int by option(
+			"-v",
+			help = "Increase verbosity"
+	).counted()
 	//endregion
 
 	init {
