@@ -1,8 +1,8 @@
 package com.jhuangyc.cgmap.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
@@ -18,7 +18,6 @@ import mu.KotlinLogging
 import java.awt.Dimension
 import java.awt.Graphics
 import java.nio.file.Path
-import java.nio.file.Paths
 import javax.swing.JFrame
 import javax.swing.JPanel
 
@@ -52,33 +51,19 @@ object GraphicCommand : CliktCommand(
 		"-o",
 		help = "The file to save the painted GraphicCommand. GUI if not specified.")
 		.path(folderOkay = false)
-
-	private val graphicInfoFile: Path by option(
-		"--graphic_info_file",
-		help = "The GraphicInfo file (.bin)")
-		.path(exists = true, folderOkay = false)
-		.default(Paths.get("data", "GraphicInfo_66.bin"))
-
-	private val graphicFile: Path by option(
-		"--graphic_file",
-		help = "The GraphicCommand file (.bin)")
-		.path(exists = true, folderOkay = false)
-		.default(Paths.get("data", "Graphic_66.bin"))
-
-	private val paletFile: Path by option(
-		"--palet_file",
-		help = "The Palet file (.cgp) to use for painting the graphic")
-		.path(exists = true, folderOkay = false)
-		.default(Paths.get("data", "palet", "palet_00.cgp"))
 	//endregion
 
+	private val fileParams by requireObject<MainCommand.FileParams>()
+
 	override fun run() {
+		echo("FileParams: $fileParams")
+
 		logger.info("Run graphic command")
 		logger.info(
-			"Displaying GraphicCommand #${graphicNo} from ${graphicInfoFile}...")
+			"Displaying GraphicCommand #${graphicNo} from ${fileParams.graphicInfoFile}...")
 
 		//region Reading and displaying GraphicInfo
-		val graphicInfo = GraphicInfoFileReader(graphicInfoFile).use {
+		val graphicInfo = GraphicInfoFileReader(fileParams.graphicInfoFile).use {
 			it.read(graphicNo)
 		}
 		echo(graphicInfo.toString().replace(", ", ",\n  "))
@@ -86,8 +71,9 @@ object GraphicCommand : CliktCommand(
 		//endregion
 
 		//region Reading and displaying GraphicCommand metadata
-		echo("Displaying GraphicCommand #${graphicNo} from ${graphicFile}...")
-		val graphic = GraphicFileReader(graphicFile).use {
+		echo(
+			"Displaying GraphicCommand #${graphicNo} from ${fileParams.graphicFile}...")
+		val graphic = GraphicFileReader(fileParams.graphicFile).use {
 			it.read(graphicInfo.address, graphicInfo.dataLength)
 		}
 		echo(graphic.toString().replace(", ", ",\n  "))
@@ -102,7 +88,7 @@ object GraphicCommand : CliktCommand(
 
 		//region Painting GraphicCommand
 		if (paint) {
-			val palet = PaletFileReader(paletFile).read()
+			val palet = PaletFileReader(fileParams.paletFile).read()
 			val paintedGraphic = GraphicPainter(graphicInfo, graphic, palet).paint()
 
 			logger.info("Painting GraphicCommand to file: ${outputFile}")
